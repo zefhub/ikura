@@ -78,7 +78,7 @@ const Navbar: React.FC = () => {
                         <span className="sr-only">Open user menu</span>
                         <img
                           className="h-8 w-8 rounded-full"
-                          src={user?.picture}
+                          src={user?.picture || ""}
                           alt="profile"
                         />
                       </Menu.Button>
