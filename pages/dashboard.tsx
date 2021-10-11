@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import { Fragment } from "react";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import NewTransaction from "../components/NewTransaction";
 
 const Home: NextPage = () => {
@@ -107,5 +108,7 @@ const Home: NextPage = () => {
     </Fragment>
   );
 };
+
+export const getServerSideProps = withPageAuthRequired();
 
 export default Home;
