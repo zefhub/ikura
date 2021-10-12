@@ -2,25 +2,14 @@ import type { NextPage } from "next";
 import { Fragment } from "react";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import NewTransaction from "../components/NewTransaction";
+import Header from "../components/Header";
 
 const Home: NextPage = () => {
   return (
     <Fragment>
-      <div className="header">
-        <div className="container">
-          <div className="header-body">
-            <div className="row align-items-end">
-              <div className="col">
-                <h6 className="header-pretitle">Overview</h6>
-                <h1 className="header-title">Dashboard</h1>
-              </div>
-              <div className="col-auto">
-                <NewTransaction />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Header title="Dashboard" subTitle="Overview">
+        <NewTransaction />
+      </Header>
       <div className="container">
         <div className="row">
           <div className="col-12 col-lg-6 col-xl">

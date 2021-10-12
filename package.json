@@ -12,6 +12,7 @@
     "@apollo/client": "^3.4.16",
     "@auth0/nextjs-auth0": "^1.5.0",
     "bootstrap": "^5.1.3",
+    "chart.js": "^3.5.1",
     "deepmerge": "^4.2.2",
     "formik": "^2.2.9",
     "graphql": "^15.6.1",

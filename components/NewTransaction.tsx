@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
+import { useUser } from "@auth0/nextjs-auth0";
 import { useHotkeys } from "react-hotkeys-hook";
 import { DateTime } from "luxon";
 import { Modal } from "react-bootstrap";
@@ -21,6 +22,7 @@ const ADD_TRANSACTION_MUTATION = gql`
 const NewTransaction: React.FC = () => {
   const [show, setShow] = useState<boolean>(false);
 
+  const { user } = useUser();
   const [addTransaction] = useMutation(ADD_TRANSACTION_MUTATION);
 
   // Register a keyboard shortcut
@@ -30,12 +32,11 @@ const NewTransaction: React.FC = () => {
     values: NewTransactionFormValues,
     { setSubmitting }: FormikHelpers<NewTransactionFormValues>
   ) => {
-    console.log("values", values);
     try {
       await addTransaction({
         variables: {
           user: {
-            username: "thedanielforum@gmail.com",
+            username: user?.email,
           },
           amount: Number(values.amount),
           when: DateTime.fromISO(values.when),
@@ -65,9 +66,7 @@ const NewTransaction: React.FC = () => {
       >
         <div className="modal-card card">
           <div className="card-header">
-            <h4 className="card-header-title" id="exampleModalCenterTitle">
-              Reigster Transaction
-            </h4>
+            <h4 className="card-header-title">Reigster Transaction</h4>
           </div>
           <div className="card-body">
             <NewTransactionForm

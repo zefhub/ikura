@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const apolloClient = useApollo(pageProps);
+  console.log("pageProps", pageProps);
 
   return (
     <UserProvider>
@@ -16,7 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon/favicon.ico" />
-          <title>Dashkit</title>
+          <title>Ikura</title>
         </Head>
         <Navbar />
         <div className="main-content">

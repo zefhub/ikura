@@ -5,14 +5,12 @@ export interface InputProps {
   name: string;
   touched: { [key: string]: boolean };
   errors: { [key: string]: string };
-  type: "text" | "number" | "date";
   label?: string;
   disabled?: boolean;
   readOnly?: boolean;
-  tabIndex?: number;
 }
 
-const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
+const Dropdown: React.FC<InputProps & FieldInputProps<any>> = (props) => {
   const hasError = (): boolean => {
     if (props.touched && props.touched[props.name] === true) {
       if (props.errors && props.errors[props.name]) {
@@ -29,18 +27,9 @@ const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
           {props.label}
         </label>
       )}
-      <input
-        className={classNames("form-control", hasError() ? "is-invalid" : "")}
-        id={`input-${props.name}`}
-        type={props.type}
-        name={props.name}
-        value={props.value || ""}
-        onChange={props.onChange}
-        onBlur={props.onBlur}
-        disabled={props.disabled}
-        tabIndex={props.tabIndex}
-        readOnly={props.readOnly}
-      />
+      <select
+        className={classNames("form-select", hasError() ? "is-invalid" : "")}
+      ></select>
       {hasError() && (
         <div className="invalid-feedback">{props.errors[props.name]}</div>
       )}
@@ -48,4 +37,4 @@ const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
   );
 };
 
-export default Input;
+export default Dropdown;

@@ -39,9 +39,6 @@ const Navbar: React.FC = () => {
                   />
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-menu-end mt-3">
-                  <Link href="/profile">
-                    <a className="dropdown-item">Profile</a>
-                  </Link>
                   <Link href="/settings">
                     <a className="dropdown-item">Settings</a>
                   </Link>
