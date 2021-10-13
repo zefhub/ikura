@@ -35,8 +35,8 @@ const ADD_CATEGORY_MUTATION = gql`
 `;
 
 const GET_CATEGORIES_QUERY = gql`
-  query getCategories {
-    queryCategory {
+  query allCategories {
+    queryCategory(order: { desc: createdAt }) {
       id
       title
       description
@@ -51,7 +51,8 @@ const SettingsCategories: NextPage = () => {
 
   const user = useAuthUser();
   const [addCategory] = useMutation(ADD_CATEGORY_MUTATION);
-  const { loading, error, data } = useQuery(GET_CATEGORIES_QUERY);
+  const { loading, error, data, refetch } = useQuery(GET_CATEGORIES_QUERY);
+
   // TODO: Error handeling
   if (error) {
     console.error(error);
@@ -71,9 +72,27 @@ const SettingsCategories: NextPage = () => {
           description: values.description,
           createdAt: DateTime.now(),
         },
+        // update: (cache, { data: { addCategory } }) => {
+        //   cache.modify({
+        //     fields: {
+        //       queryCategory(existing = []) {
+        //         const newRef = cache.writeFragment({
+        //           data: addCategory,
+        //           fragment: gql`
+        //             fragment NewCategory on queryCategory {
+        //               id
+        //             }
+        //           `,
+        //         });
+        //         return [newRef, ...existing];
+        //       },
+        //     },
+        //   });
+        // },
       });
       setSubmitting(false);
       setNewCategoryShow(false);
+      refetch();
     } catch (err) {
       console.error(err);
     }

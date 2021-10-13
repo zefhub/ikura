@@ -50,7 +50,9 @@ const Settings: NextPage = () => {
                   <div className="avatar">
                     <img
                       className="avatar-img rounded-circle"
-                      src={user?.picture || "img/avatars/profiles/avatar-1.jpg"}
+                      src={
+                        user?.photoURL || "img/avatars/profiles/avatar-1.jpg"
+                      }
                       alt="profile"
                     />
                   </div>
