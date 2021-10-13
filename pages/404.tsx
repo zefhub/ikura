@@ -1,6 +1,7 @@
+import type { NextPage } from "next";
 import Link from "next/link";
 
-const Err404: React.FC = () => {
+const Err404: NextPage = () => {
   return (
     <main>
       <div className="container mx-auto">
@@ -10,7 +11,7 @@ const Err404: React.FC = () => {
           <h3 className="text-gray-500 mt-2">
             Sorry, we could not find the page you are looking for.
           </h3>
-          <Link href="/dashboard">
+          <Link href="/">
             <a className="p-2 pt-4 px-3 font-bold text-blue-500 hover:text-blue-400">
               Go back home
             </a>

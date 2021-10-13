@@ -2,8 +2,8 @@ import type { NextPage } from "next";
 import { useState } from "react";
 import Link from "next/link";
 import { FormikHelpers } from "formik";
+import { useAuthUser, withAuthUser, AuthAction } from "next-firebase-auth";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { DateTime } from "luxon";
 import { Modal } from "react-bootstrap";
 import CategoryForm, { CategoryFormValues } from "../../forms/CategoryForm";
@@ -49,7 +49,7 @@ const GET_CATEGORIES_QUERY = gql`
 const SettingsCategories: NextPage = () => {
   const [newCategoryShow, setNewCategoryShow] = useState<boolean>(false);
 
-  const { user } = useUser();
+  const user = useAuthUser();
   const [addCategory] = useMutation(ADD_CATEGORY_MUTATION);
   const { loading, error, data } = useQuery(GET_CATEGORIES_QUERY);
   // TODO: Error handeling
@@ -65,9 +65,10 @@ const SettingsCategories: NextPage = () => {
       await addCategory({
         variables: {
           user: {
-            username: user?.email,
+            id: user?.id,
           },
           title: values.title,
+          description: values.description,
           createdAt: DateTime.now(),
         },
       });
@@ -126,34 +127,38 @@ const SettingsCategories: NextPage = () => {
             </div>
             <div className="card-body">
               {!loading ? (
-                <div className="list-group list-group-flush my-n3">
-                  {data.queryCategory.map((category: any) => (
-                    <div key={category.id} className="list-group-item">
-                      <div className="row align-items-center">
-                        <div className="col-auto">
-                          <div className="avatar">
-                            <img
-                              src="/img/avatars/profiles/avatar-1.jpg"
-                              alt="..."
-                              className="avatar-img rounded-circle"
-                            />
+                data.queryCategory.length > 0 ? (
+                  <div className="list-group list-group-flush my-n3">
+                    {data.queryCategory.map((category: any) => (
+                      <div key={category.id} className="list-group-item">
+                        <div className="row align-items-center">
+                          <div className="col-auto">
+                            <div className="avatar">
+                              <img
+                                src="/img/avatars/profiles/avatar-1.jpg"
+                                alt="..."
+                                className="avatar-img rounded-circle"
+                              />
+                            </div>
                           </div>
+                          <div className="col-5 ms-n2">
+                            <h4 className="mb-1">{category.title}</h4>
+                            {category.description && (
+                              <p className="small text-muted mb-0">
+                                <span className="d-block text-reset text-truncate">
+                                  {category.description}
+                                </span>
+                              </p>
+                            )}
+                          </div>
+                          <div className="col-auto"></div>
                         </div>
-                        <div className="col-5 ms-n2">
-                          <h4 className="mb-1">{category.title}</h4>
-                          {category.description && (
-                            <p className="small text-muted mb-0">
-                              <span className="d-block text-reset text-truncate">
-                                {category.description}
-                              </span>
-                            </p>
-                          )}
-                        </div>
-                        <div className="col-auto"></div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center mt-3 mb-3">No data</div>
+                )
               ) : (
                 <div className="text-center mt-3 mb-3">
                   <div className="spinner-border" role="status">
@@ -187,4 +192,6 @@ const SettingsCategories: NextPage = () => {
   );
 };
 
-export default withPageAuthRequired(SettingsCategories);
+export default withAuthUser({
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(SettingsCategories);

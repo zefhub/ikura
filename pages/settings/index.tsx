@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
 import Link from "next/link";
-import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { useAuthUser, withAuthUser, AuthAction } from "next-firebase-auth";
 import GeneralSettingsForm from "../../forms/GeneralSettingsForm";
 
 const Settings: NextPage = () => {
-  const { user } = useUser();
+  const user = useAuthUser();
 
   const onPersonalInfoSubmit = () => {};
 
@@ -70,14 +70,18 @@ const Settings: NextPage = () => {
             </div>
           </div>
           <hr className="my-5" />
-          <GeneralSettingsForm
-            onSubmit={onPersonalInfoSubmit}
-            initialValues={{ email: user?.email }}
-          />
+          {user?.id && (
+            <GeneralSettingsForm
+              onSubmit={onPersonalInfoSubmit}
+              initialValues={{ email: user?.email, phone: user?.phoneNumber }}
+            />
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default withPageAuthRequired(Settings);
+export default withAuthUser({
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(Settings);

@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
-import { useUser } from "@auth0/nextjs-auth0";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useAuthUser } from "next-firebase-auth";
 import { DateTime } from "luxon";
 import { Modal } from "react-bootstrap";
 import { FormikHelpers } from "formik";
@@ -22,7 +22,7 @@ const ADD_TRANSACTION_MUTATION = gql`
 const NewTransaction: React.FC = () => {
   const [show, setShow] = useState<boolean>(false);
 
-  const { user } = useUser();
+  const user = useAuthUser();
   const [addTransaction] = useMutation(ADD_TRANSACTION_MUTATION);
 
   // Register a keyboard shortcut
@@ -36,7 +36,7 @@ const NewTransaction: React.FC = () => {
       await addTransaction({
         variables: {
           user: {
-            username: user?.email,
+            id: user?.id,
           },
           amount: Number(values.amount),
           when: DateTime.fromISO(values.when),

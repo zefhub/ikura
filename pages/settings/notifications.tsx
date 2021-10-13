@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import { Fragment } from "react";
 import Link from "next/link";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 const SettingsNotifications: NextPage = () => {
   return (
@@ -44,4 +43,4 @@ const SettingsNotifications: NextPage = () => {
   );
 };
 
-export default withPageAuthRequired(SettingsNotifications);
+export default SettingsNotifications;
