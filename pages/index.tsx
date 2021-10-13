@@ -1,6 +1,10 @@
 import type { NextPage } from "next";
 import { Fragment } from "react";
-import { withAuthUser, AuthAction } from "next-firebase-auth";
+import {
+  withAuthUser,
+  AuthAction,
+  withAuthUserTokenSSR,
+} from "next-firebase-auth";
 import NewTransaction from "../components/NewTransaction";
 import Header from "../components/Header";
 import TransactionsCountCard from "../components/TransactionsCountCard";
@@ -83,6 +87,10 @@ const Home: NextPage = () => {
   );
 };
 
-export default withAuthUser({
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
-})(Home);
+export const getServerSideProps = withAuthUserTokenSSR({
+  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
+})(async () => {
+  return { props: {} };
+});
+
+export default withAuthUser()(Home);
