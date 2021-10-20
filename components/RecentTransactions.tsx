@@ -11,6 +11,10 @@ const GET_RECENT_TRANSACTIONS = gql`
       id
       amount
       when
+      category {
+        id
+        title
+      }
     }
   }
 `;
