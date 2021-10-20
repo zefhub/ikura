@@ -11,6 +11,7 @@ import CategoryForm, { CategoryFormValues } from "../../forms/CategoryForm";
 const ADD_CATEGORY_MUTATION = gql`
   mutation addCategory(
     $user: UserRef!
+    $type: CategoryType!
     $title: String!
     $createdAt: DateTime!
     $description: String
@@ -20,6 +21,7 @@ const ADD_CATEGORY_MUTATION = gql`
     addCategory(
       input: {
         user: $user
+        type: $type
         title: $title
         createdAt: $createdAt
         description: $description
@@ -68,6 +70,7 @@ const SettingsCategories: NextPage = () => {
           user: {
             id: user?.id,
           },
+          type: "PRIVATE",
           title: values.title,
           description: values.description,
           createdAt: DateTime.now(),

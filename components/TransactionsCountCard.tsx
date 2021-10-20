@@ -1,23 +1,28 @@
 import { memo } from "react";
 import { gql, useQuery } from "@apollo/client";
+import { DateTime } from "luxon";
 
 const GET_TOTOAL_TRANSACTIONS = gql`
-  query totalTransactions {
-    aggregateTransaction {
+  query totalTransactions($from: DateTime!) {
+    aggregateTransaction(
+      filter: { and: { when: { ge: $from }, type: { eq: EXPENSE } } }
+    ) {
       count
     }
   }
 `;
 
 const TransactionsCountCard: React.FC = () => {
-  const { loading, error, data } = useQuery(GET_TOTOAL_TRANSACTIONS);
+  const { loading, error, data } = useQuery(GET_TOTOAL_TRANSACTIONS, {
+    variables: { from: DateTime.local().startOf("month").toString() },
+  });
   if (error) {
     console.error(error);
   }
 
   const getCount = (): number => {
     if (data && data.aggregateTransaction && data.aggregateTransaction.count) {
-      return data.aggregateTransaction.count;
+      return data.aggregateTransaction.count.toLocaleString();
     }
     return 0;
   };
@@ -38,9 +43,6 @@ const TransactionsCountCard: React.FC = () => {
               ) : (
                 <span className="h2 mb-0">{getCount()}</span>
               )}
-            </div>
-            <div className="col-auto">
-              <span className="h2 fe fe-clock text-muted mb-0"></span>
             </div>
           </div>
         </div>

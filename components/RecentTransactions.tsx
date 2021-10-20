@@ -54,7 +54,6 @@ const RecentTransactions: React.FC = () => {
       showCancelButton: true,
       confirmButtonText: "Delete",
       reverseButtons: true,
-      showLoaderOnConfirm: true,
     });
     if (isConfirmed) {
       await deleteTransaction({

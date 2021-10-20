@@ -40,7 +40,8 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = (props) => {
             touched={touched}
             errors={errors}
             name="amount"
-            type="text"
+            type="number"
+            pattern="\d*"
             label="Amount"
             placeholder="10,000"
             tabIndex={0}

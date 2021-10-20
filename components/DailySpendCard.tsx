@@ -1,30 +1,36 @@
 import { Fragment, memo } from "react";
-import { DateTime } from "luxon";
 import { gql, useQuery } from "@apollo/client";
+import { DateTime } from "luxon";
 
-const GET_AMOUNT_AVG = gql`
-  query totalTransactionsAmountAverage($from: DateTime!) {
-    aggregateTransaction(filter: { when: { gt: $from } }) {
-      amountAvg
+const GET_AMOUNT_MAX = gql`
+  query totalTransactionsSum($from: DateTime!) {
+    aggregateTransaction(
+      filter: { and: { when: { ge: $from }, type: { eq: EXPENSE } } }
+    ) {
+      amountSum
     }
   }
 `;
 
 const DailySpendCard: React.FC = () => {
-  const { loading, error, data } = useQuery(GET_AMOUNT_AVG, {
-    variables: { from: DateTime.local().startOf("month") },
+  const { loading, error, data } = useQuery(GET_AMOUNT_MAX, {
+    variables: { from: DateTime.local().startOf("month").toString() },
   });
   if (error) {
     console.error(error);
   }
 
+  const days = Math.ceil(
+    DateTime.local().diff(DateTime.local().startOf("month"), ["days"]).days
+  );
+
   const getAmount = (): number => {
     if (
       data &&
       data.aggregateTransaction &&
-      data.aggregateTransaction.amountAvg
+      data.aggregateTransaction.amountSum
     ) {
-      return data.aggregateTransaction.amountAvg;
+      return Math.ceil(data.aggregateTransaction.amountSum / days);
     }
     return 0;
   };
@@ -42,7 +48,9 @@ const DailySpendCard: React.FC = () => {
                 </div>
               ) : (
                 <Fragment>
-                  <span className="h2 mb-0">{getAmount()} 円</span>
+                  <span className="h2 mb-0">
+                    {getAmount().toLocaleString()} 円
+                  </span>
                   {false && (
                     <span
                       className="badge bg-danger-soft mt-n1"
@@ -53,9 +61,6 @@ const DailySpendCard: React.FC = () => {
                   )}
                 </Fragment>
               )}
-            </div>
-            <div className="col-auto">
-              <span className="h2 fe fe-dollar-sign text-muted mb-0"></span>
             </div>
           </div>
         </div>

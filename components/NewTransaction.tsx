@@ -12,12 +12,19 @@ import NewTransactionForm, {
 const ADD_TRANSACTION_MUTATION = gql`
   mutation addTransaction(
     $user: UserRef!
+    $type: TransactionType!
     $amount: Float!
     $when: DateTime!
     $category: CategoryRef!
   ) {
     addTransaction(
-      input: { user: $user, amount: $amount, when: $when, category: $category }
+      input: {
+        user: $user
+        type: $type
+        amount: $amount
+        when: $when
+        category: $category
+      }
     ) {
       transaction {
         id
@@ -60,6 +67,7 @@ const NewTransaction: React.FC = () => {
           user: {
             id: user?.id,
           },
+          type: "EXPENSE",
           amount: Number(values.amount),
           when: DateTime.fromISO(values.when),
           category: {
@@ -67,6 +75,7 @@ const NewTransaction: React.FC = () => {
           },
         },
       });
+      // analytics.logEvent("add_transaction");
       setSubmitting(false);
       setShow(false);
     } catch (err) {
@@ -81,7 +90,7 @@ const NewTransaction: React.FC = () => {
         className="btn btn-primary lift"
         onClick={() => setShow(true)}
       >
-        New Transaction
+        New Expense
       </button>
       <Modal
         show={show}
@@ -91,7 +100,7 @@ const NewTransaction: React.FC = () => {
       >
         <div className="modal-card card">
           <div className="card-header">
-            <h4 className="card-header-title">Reigster Transaction</h4>
+            <h4 className="card-header-title">Reigster Expense</h4>
           </div>
           <div className="card-body" style={{ maxHeight: "none" }}>
             <NewTransactionForm

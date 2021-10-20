@@ -4,7 +4,9 @@ import { gql, useQuery } from "@apollo/client";
 
 const GET_AMOUNT_MAX = gql`
   query totalTransactionsSum($from: DateTime!) {
-    aggregateTransaction(filter: { when: { gt: $from } }) {
+    aggregateTransaction(
+      filter: { and: { when: { ge: $from }, type: { eq: EXPENSE } } }
+    ) {
       amountSum
     }
   }
@@ -12,7 +14,7 @@ const GET_AMOUNT_MAX = gql`
 
 const TotalSpendCard: React.FC = () => {
   const { loading, error, data } = useQuery(GET_AMOUNT_MAX, {
-    variables: { from: DateTime.local().startOf("month") },
+    variables: { from: DateTime.local().startOf("month").toString() },
   });
   if (error) {
     console.error(error);
@@ -24,7 +26,7 @@ const TotalSpendCard: React.FC = () => {
       data.aggregateTransaction &&
       data.aggregateTransaction.amountSum
     ) {
-      return data.aggregateTransaction.amountSum;
+      return data.aggregateTransaction.amountSum.toLocaleString();
     }
     return 0;
   };
@@ -45,9 +47,6 @@ const TotalSpendCard: React.FC = () => {
               ) : (
                 <span className="h2 mb-0">{getAmount()} 円</span>
               )}
-            </div>
-            <div className="col-auto">
-              <span className="h2 fe fe-dollar-sign text-muted mb-0"></span>
             </div>
           </div>
         </div>

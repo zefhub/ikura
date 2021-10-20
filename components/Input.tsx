@@ -6,6 +6,7 @@ export interface InputProps {
   touched: { [key: string]: boolean };
   errors: { [key: string]: string };
   type: "text" | "number" | "date";
+  pattern?: string;
   label?: string;
   disabled?: boolean;
   readOnly?: boolean;
@@ -29,6 +30,7 @@ const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
         type={props.type}
         name={props.name}
         value={props.value || ""}
+        pattern={props.pattern}
         onChange={props.onChange}
         onBlur={props.onBlur}
         disabled={props.disabled}
