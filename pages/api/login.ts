@@ -1,12 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { setAuthCookies } from "next-firebase-auth";
+import { setAuthCookies, getFirebaseAdmin } from "next-firebase-auth";
 import initAuth from "../../lib/initAuth";
 
 initAuth();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await setAuthCookies(req, res);
+    const { AuthUser } = await setAuthCookies(req, res);
+    if (AuthUser.id) {
+      await getFirebaseAdmin()
+        .auth()
+        .setCustomUserClaims(AuthUser.id, {
+          "https://dgraph.io/jwt/claims": {
+            USER_ID: AuthUser.id,
+            isAuthenticated: "true",
+          },
+        });
+    }
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);

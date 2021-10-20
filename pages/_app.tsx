@@ -1,4 +1,5 @@
 import "../styles/theme.scss";
+import "sweetalert2/src/sweetalert2.scss";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { ApolloProvider } from "@apollo/client";

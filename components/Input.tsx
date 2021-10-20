@@ -1,5 +1,5 @@
 import { FieldInputProps } from "formik";
-import { classNames } from "../utils";
+import { classNames, fieldHasError } from "../utils";
 
 export interface InputProps {
   name: string;
@@ -13,15 +13,6 @@ export interface InputProps {
 }
 
 const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
-  const hasError = (): boolean => {
-    if (props.touched && props.touched[props.name] === true) {
-      if (props.errors && props.errors[props.name]) {
-        return true;
-      }
-    }
-    return false;
-  };
-
   return (
     <div className={classNames("form-group")}>
       {props.label && (
@@ -30,7 +21,10 @@ const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
         </label>
       )}
       <input
-        className={classNames("form-control", hasError() ? "is-invalid" : "")}
+        className={classNames(
+          "form-control",
+          fieldHasError(props) ? "is-invalid" : ""
+        )}
         id={`input-${props.name}`}
         type={props.type}
         name={props.name}
@@ -41,7 +35,7 @@ const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
         tabIndex={props.tabIndex}
         readOnly={props.readOnly}
       />
-      {hasError() && (
+      {fieldHasError(props) && (
         <div className="invalid-feedback">{props.errors[props.name]}</div>
       )}
     </div>
