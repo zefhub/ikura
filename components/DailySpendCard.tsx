@@ -1,4 +1,5 @@
 import { Fragment, memo } from "react";
+import { useIntl } from "react-intl";
 import { gql, useQuery } from "@apollo/client";
 import { DateTime } from "luxon";
 
@@ -13,6 +14,8 @@ const GET_AMOUNT_MAX = gql`
 `;
 
 const DailySpendCard: React.FC = () => {
+  const intl = useIntl();
+
   const { loading, error, data } = useQuery(GET_AMOUNT_MAX, {
     variables: { from: DateTime.local().startOf("month").toString() },
   });
@@ -44,12 +47,25 @@ const DailySpendCard: React.FC = () => {
               <h6 className="text-uppercase text-muted mb-2">Daily spend</h6>
               {loading ? (
                 <div className="spinner-border spinner-border-sm" role="status">
-                  <span className="visually-hidden">Loading...</span>
+                  <span className="visually-hidden">
+                    {intl.formatMessage({
+                      defaultMessage: "Loading...",
+                      description: "default loading",
+                    })}
+                  </span>
                 </div>
               ) : (
                 <Fragment>
                   <span className="h2 mb-0">
-                    {getAmount().toLocaleString()} 円
+                    {intl.formatMessage(
+                      {
+                        defaultMessage: "{amount} $",
+                        description: "monetary amount readout",
+                      },
+                      {
+                        amount: intl.formatNumber(getAmount()),
+                      }
+                    )}
                   </span>
                   {false && (
                     <span

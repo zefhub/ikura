@@ -1,7 +1,21 @@
-import type { NextPage } from "next";
+import { useIntl } from "react-intl";
 import Link from "next/link";
+import loadIntlMessages from "../helpers/loadIntlMessages";
+import { InferGetStaticPropsType } from "next";
 
-const Err404: NextPage = () => {
+export async function getStaticProps(ctx: any) {
+  return {
+    props: {
+      intlMessages: await loadIntlMessages(ctx),
+    },
+  };
+}
+
+type HomePageProps = InferGetStaticPropsType<typeof getStaticProps>;
+
+const Err404 = (props: HomePageProps) => {
+  const intl = useIntl();
+
   return (
     <main>
       <div className="container mx-auto">

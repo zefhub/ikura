@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useAuthUser, withAuthUser, AuthAction } from "next-firebase-auth";
+import loadIntlMessages from "../../helpers/loadIntlMessages";
 import GeneralSettingsForm from "../../forms/GeneralSettingsForm";
 
 const Settings: NextPage = () => {
@@ -83,6 +84,14 @@ const Settings: NextPage = () => {
     </div>
   );
 };
+
+export async function getStaticProps(ctx: any) {
+  return {
+    props: {
+      intlMessages: await loadIntlMessages(ctx),
+    },
+  };
+}
 
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,

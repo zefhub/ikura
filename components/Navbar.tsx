@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 import { forwardRef } from "react";
 import { useRouter } from "next/router";
+import { useIntl } from "react-intl";
 import { useAuthUser } from "next-firebase-auth";
 import Link from "next/link";
 import { Navbar as StrapNavbar, Nav, Dropdown } from "react-bootstrap";
@@ -9,6 +10,7 @@ import { classNames } from "../utils";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
+  const intl = useIntl();
   const user = useAuthUser();
 
   if (!user.id) {
@@ -38,11 +40,19 @@ const Navbar: React.FC = () => {
             </Dropdown.Toggle>
             <Dropdown.Menu className="dropdown-menu-end mt-3">
               <Link href="/settings">
-                <a className="dropdown-item">Settings</a>
+                <a className="dropdown-item">
+                  {intl.formatMessage({
+                    defaultMessage: "Settings",
+                    description: "navbar dropdown option",
+                  })}
+                </a>
               </Link>
               <hr className="dropdown-divider" />
               <a onClick={() => user.signOut()} className="dropdown-item">
-                Logout
+                {intl.formatMessage({
+                  defaultMessage: "Logout",
+                  description: "navbar dropdown option",
+                })}
               </a>
             </Dropdown.Menu>
           </Dropdown>
@@ -56,7 +66,10 @@ const Navbar: React.FC = () => {
                   router.asPath === "/" && "active"
                 )}
               >
-                Dashboard
+                {intl.formatMessage({
+                  defaultMessage: "Dashboard",
+                  description: "navbar",
+                })}
               </a>
             </Link>
           </Nav>

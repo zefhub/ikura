@@ -1,0 +1,30 @@
+{
+  "HXoCik": {
+    "defaultMessage": "セッティング",
+    "description": "navbar dropdown option"
+  },
+  "M4hPoZ": {
+    "defaultMessage": "ホーム",
+    "description": "navbar"
+  },
+  "jyUN7v": {
+    "defaultMessage": "Overview",
+    "description": "index header subTitle"
+  },
+  "kDqURM": {
+    "defaultMessage": "ログアウト",
+    "description": "navbar dropdown option"
+  },
+  "yMjntE": {
+    "defaultMessage": "ホーム",
+    "description": "index header title"
+  },
+  "bQAtuf": {
+    "defaultMessage": "ローディング中",
+    "description": "default loading"
+  },
+  "a9m3iY": {
+    "defaultMessage": "{amount} 円",
+    "description": "monetary amount readout"
+  }
+}

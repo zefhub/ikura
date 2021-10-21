@@ -6,6 +6,7 @@ import { useAuthUser, withAuthUser, AuthAction } from "next-firebase-auth";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { DateTime } from "luxon";
 import { Modal } from "react-bootstrap";
+import loadIntlMessages from "../../helpers/loadIntlMessages";
 import CategoryForm, { CategoryFormValues } from "../../forms/CategoryForm";
 
 const ADD_CATEGORY_MUTATION = gql`
@@ -213,6 +214,14 @@ const SettingsCategories: NextPage = () => {
     </div>
   );
 };
+
+export async function getStaticProps(ctx: any) {
+  return {
+    props: {
+      intlMessages: await loadIntlMessages(ctx),
+    },
+  };
+}
 
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,

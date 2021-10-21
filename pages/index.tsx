@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
 import { Fragment } from "react";
+import { useIntl } from "react-intl";
 import {
   withAuthUser,
   AuthAction,
   withAuthUserTokenSSR,
 } from "next-firebase-auth";
+import loadIntlMessages from "../helpers/loadIntlMessages";
 import NewTransaction from "../components/NewTransaction";
 import Header from "../components/Header";
 import TransactionsCountCard from "../components/TransactionsCountCard";
@@ -12,10 +14,21 @@ import DailySpendCard from "../components/DailySpendCard";
 import TotalSpendCard from "../components/TotalSpendCard";
 import RecentTransactions from "../components/RecentTransactions";
 
-const Home: NextPage = () => {
+const Home: NextPage = (props) => {
+  const intl = useIntl();
+
   return (
     <Fragment>
-      <Header title="Dashboard" subTitle="Overview">
+      <Header
+        title={intl.formatMessage({
+          defaultMessage: "Dashboard",
+          description: "index header title",
+        })}
+        subTitle={intl.formatMessage({
+          defaultMessage: "Overview",
+          description: "index header subTitle",
+        })}
+      >
         <NewTransaction />
       </Header>
       <div className="container">
@@ -35,9 +48,6 @@ const Home: NextPage = () => {
                     >
                       +3.5%
                     </span>
-                  </div>
-                  <div className="col-auto">
-                    <span className="h2 fe fe-dollar-sign text-muted mb-0"></span>
                   </div>
                 </div>
               </div>
@@ -59,8 +69,12 @@ const Home: NextPage = () => {
 
 export const getServerSideProps = withAuthUserTokenSSR({
   whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-})(async () => {
-  return { props: {} };
+})(async (ctx: any) => {
+  return {
+    props: {
+      intlMessages: await loadIntlMessages(ctx),
+    },
+  };
 });
 
 export default withAuthUser({

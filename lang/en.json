@@ -1,0 +1,34 @@
+{
+  "CHu6Xm": {
+    "defaultMessage": "Total Spend (month)",
+    "description": "TotalSpendCard title"
+  },
+  "HXoCik": {
+    "defaultMessage": "Settings",
+    "description": "navbar dropdown option"
+  },
+  "M4hPoZ": {
+    "defaultMessage": "Dashboard",
+    "description": "navbar"
+  },
+  "a9m3iY": {
+    "defaultMessage": "{amount} $",
+    "description": "monetary amount readout"
+  },
+  "bQAtuf": {
+    "defaultMessage": "Loading...",
+    "description": "default loading"
+  },
+  "jyUN7v": {
+    "defaultMessage": "Overview",
+    "description": "index header subTitle"
+  },
+  "kDqURM": {
+    "defaultMessage": "Logout",
+    "description": "navbar dropdown option"
+  },
+  "yMjntE": {
+    "defaultMessage": "Dashboard",
+    "description": "index header title"
+  }
+}

@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { Fragment } from "react";
 import Link from "next/link";
+import loadIntlMessages from "../../helpers/loadIntlMessages";
 
 const SettingsNotifications: NextPage = () => {
   return (
@@ -42,5 +43,13 @@ const SettingsNotifications: NextPage = () => {
     </Fragment>
   );
 };
+
+export async function getStaticProps(ctx: any) {
+  return {
+    props: {
+      intlMessages: await loadIntlMessages(ctx),
+    },
+  };
+}
 
 export default SettingsNotifications;
