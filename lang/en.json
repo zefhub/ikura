@@ -1,4 +1,12 @@
 {
+  "+6biWd": {
+    "defaultMessage": "General",
+    "description": "settings menu general"
+  },
+  "4f3Ha0": {
+    "defaultMessage": "Notifications",
+    "description": "settings menu notifications"
+  },
   "CHu6Xm": {
     "defaultMessage": "Total Spend (month)",
     "description": "TotalSpendCard title"
@@ -26,6 +34,14 @@
   "kDqURM": {
     "defaultMessage": "Logout",
     "description": "navbar dropdown option"
+  },
+  "kHTW+/": {
+    "defaultMessage": "Settings",
+    "description": "settings page-header settings"
+  },
+  "o30WaQ": {
+    "defaultMessage": "Categories",
+    "description": "settings menu categories"
   },
   "yMjntE": {
     "defaultMessage": "Dashboard",

@@ -1,4 +1,16 @@
 {
+  "+6biWd": {
+    "defaultMessage": "General",
+    "description": "settings menu general"
+  },
+  "4f3Ha0": {
+    "defaultMessage": "Notifications",
+    "description": "settings menu notifications"
+  },
+  "CHu6Xm": {
+    "defaultMessage": "Total Spend (month)",
+    "description": "TotalSpendCard title"
+  },
   "HXoCik": {
     "defaultMessage": "セッティング",
     "description": "navbar dropdown option"
@@ -6,6 +18,14 @@
   "M4hPoZ": {
     "defaultMessage": "ホーム",
     "description": "navbar"
+  },
+  "a9m3iY": {
+    "defaultMessage": "{amount} 円",
+    "description": "monetary amount readout"
+  },
+  "bQAtuf": {
+    "defaultMessage": "ローディング中",
+    "description": "default loading"
   },
   "jyUN7v": {
     "defaultMessage": "Overview",
@@ -15,16 +35,16 @@
     "defaultMessage": "ログアウト",
     "description": "navbar dropdown option"
   },
+  "kHTW+/": {
+    "defaultMessage": "セッティング",
+    "description": "settings page-header settings"
+  },
+  "o30WaQ": {
+    "defaultMessage": "Categories",
+    "description": "settings menu categories"
+  },
   "yMjntE": {
     "defaultMessage": "ホーム",
     "description": "index header title"
-  },
-  "bQAtuf": {
-    "defaultMessage": "ローディング中",
-    "description": "default loading"
-  },
-  "a9m3iY": {
-    "defaultMessage": "{amount} 円",
-    "description": "monetary amount readout"
   }
 }
