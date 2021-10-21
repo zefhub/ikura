@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { gql, useQuery } from "@apollo/client";
+import { useIntl } from "react-intl";
 import { DateTime } from "luxon";
 
 const GET_TOTOAL_TRANSACTIONS = gql`
@@ -13,6 +14,8 @@ const GET_TOTOAL_TRANSACTIONS = gql`
 `;
 
 const TransactionsCountCard: React.FC = () => {
+  const intl = useIntl();
+
   const { loading, error, data } = useQuery(GET_TOTOAL_TRANSACTIONS, {
     variables: { from: DateTime.local().startOf("month").toString() },
   });
@@ -38,7 +41,12 @@ const TransactionsCountCard: React.FC = () => {
               </h6>
               {loading ? (
                 <div className="spinner-border spinner-border-sm" role="status">
-                  <span className="visually-hidden">Loading...</span>
+                  <span className="visually-hidden">
+                    {intl.formatMessage({
+                      defaultMessage: "Loading...",
+                      description: "default loading",
+                    })}
+                  </span>
                 </div>
               ) : (
                 <span className="h2 mb-0">{getCount()}</span>

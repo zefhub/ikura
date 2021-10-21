@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
 import Link from "next/link";
+import { useIntl } from "react-intl";
 import { useAuthUser, withAuthUser, AuthAction } from "next-firebase-auth";
 import loadIntlMessages from "../../helpers/loadIntlMessages";
 import GeneralSettingsForm from "../../forms/GeneralSettingsForm";
 
 const Settings: NextPage = () => {
+  const intl = useIntl();
   const user = useAuthUser();
 
   const onPersonalInfoSubmit = () => {};
@@ -18,7 +20,12 @@ const Settings: NextPage = () => {
               <div className="row align-items-center">
                 <div className="col">
                   <h6 className="header-pretitle">Overview</h6>
-                  <h1 className="header-title">Settings</h1>
+                  <h1 className="header-title">
+                    {intl.formatMessage({
+                      defaultMessage: "Settings",
+                      description: "settings page-header settings",
+                    })}
+                  </h1>
                 </div>
               </div>
               <div className="row align-items-center">
@@ -26,17 +33,32 @@ const Settings: NextPage = () => {
                   <ul className="nav nav-tabs nav-overflow header-tabs">
                     <li className="nav-item">
                       <Link href="/settings">
-                        <a className="nav-link active">General</a>
+                        <a className="nav-link active">
+                          {intl.formatMessage({
+                            defaultMessage: "General",
+                            description: "settings menu general",
+                          })}
+                        </a>
                       </Link>
                     </li>
                     <li className="nav-item">
                       <Link href="/settings/categories">
-                        <a className="nav-link">Categories</a>
+                        <a className="nav-link">
+                          {intl.formatMessage({
+                            defaultMessage: "Categories",
+                            description: "settings menu categories",
+                          })}
+                        </a>
                       </Link>
                     </li>
                     <li className="nav-item">
                       <Link href="/settings/notifications">
-                        <a className="nav-link">Notifications</a>
+                        <a className="nav-link">
+                          {intl.formatMessage({
+                            defaultMessage: "Notifications",
+                            description: "settings menu notifications",
+                          })}
+                        </a>
                       </Link>
                     </li>
                   </ul>

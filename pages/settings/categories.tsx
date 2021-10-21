@@ -1,5 +1,7 @@
 import type { NextPage } from "next";
 import { useState } from "react";
+import { useRouter } from "next/router";
+import { useIntl } from "react-intl";
 import Link from "next/link";
 import { FormikHelpers } from "formik";
 import { useAuthUser, withAuthUser, AuthAction } from "next-firebase-auth";
@@ -8,6 +10,7 @@ import { DateTime } from "luxon";
 import { Modal } from "react-bootstrap";
 import loadIntlMessages from "../../helpers/loadIntlMessages";
 import CategoryForm, { CategoryFormValues } from "../../forms/CategoryForm";
+import { getTitleLang } from "../../utils";
 
 const ADD_CATEGORY_MUTATION = gql`
   mutation addCategory(
@@ -41,8 +44,13 @@ const GET_CATEGORIES_QUERY = gql`
   query allCategories {
     queryCategory(order: { desc: createdAt }) {
       id
+      type
       title
+      titleLangEn
+      titleLangJa
       description
+      descriptionLangEn
+      descriptionLangJa
       icon
       color
     }
@@ -52,6 +60,8 @@ const GET_CATEGORIES_QUERY = gql`
 const SettingsCategories: NextPage = () => {
   const [newCategoryShow, setNewCategoryShow] = useState<boolean>(false);
 
+  const { locale } = useRouter();
+  const intl = useIntl();
   const user = useAuthUser();
   const [addCategory] = useMutation(ADD_CATEGORY_MUTATION);
   const { loading, error, data, refetch } = useQuery(GET_CATEGORIES_QUERY);
@@ -102,6 +112,31 @@ const SettingsCategories: NextPage = () => {
     }
   };
 
+  const getDefaultCategories = () => {
+    if (data && data.queryCategory) {
+      return data.queryCategory.filter((o: any) => o.type === "DEFAULT");
+    }
+    return [];
+  };
+
+  const getPrivateCategories = () => {
+    if (data && data.queryCategory) {
+      return data.queryCategory.filter((o: any) => o.type === "PRIVATE");
+    }
+    return [];
+  };
+
+  const getDescription = (category: any): string => {
+    switch (locale) {
+      case "en":
+        return category?.descriptionLangEn;
+      case "ja":
+        return category?.descriptionLangJa;
+      default:
+        return category?.descriptionLangEn;
+    }
+  };
+
   return (
     <div className="container">
       <div className="row justify-content-center">
@@ -111,7 +146,12 @@ const SettingsCategories: NextPage = () => {
               <div className="row align-items-center">
                 <div className="col">
                   <h6 className="header-pretitle">Overview</h6>
-                  <h1 className="header-title">Settings</h1>
+                  <h1 className="header-title">
+                    {intl.formatMessage({
+                      defaultMessage: "Settings",
+                      description: "settings page-header settings",
+                    })}
+                  </h1>
                 </div>
               </div>
               <div className="row align-items-center">
@@ -119,22 +159,81 @@ const SettingsCategories: NextPage = () => {
                   <ul className="nav nav-tabs nav-overflow header-tabs">
                     <li className="nav-item">
                       <Link href="/settings">
-                        <a className="nav-link">General</a>
+                        <a className="nav-link">
+                          {intl.formatMessage({
+                            defaultMessage: "General",
+                            description: "settings menu general",
+                          })}
+                        </a>
                       </Link>
                     </li>
                     <li className="nav-item">
                       <Link href="/settings/categories">
-                        <a className="nav-link active">Categories</a>
+                        <a className="nav-link active">
+                          {intl.formatMessage({
+                            defaultMessage: "Categories",
+                            description: "settings menu categories",
+                          })}
+                        </a>
                       </Link>
                     </li>
                     <li className="nav-item">
                       <Link href="/settings/notifications">
-                        <a className="nav-link">Notifications</a>
+                        <a className="nav-link">
+                          {intl.formatMessage({
+                            defaultMessage: "Notifications",
+                            description: "settings menu notifications",
+                          })}
+                        </a>
                       </Link>
                     </li>
                   </ul>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="card">
+            <div className="card-header">
+              <h4 className="card-header-title">Default categories</h4>
+            </div>
+            <div className="card-body">
+              {loading ? (
+                <div className="text-center mt-3 mb-3">
+                  <div className="spinner-border" role="status">
+                    <span className="visually-hidden">
+                      {intl.formatMessage({
+                        defaultMessage: "Loading...",
+                        description: "default loading",
+                      })}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="list-group list-group-flush my-n3">
+                  {getDefaultCategories().map((category: any) => (
+                    <div key={category.id} className="list-group-item">
+                      <div className="row align-items-center">
+                        <div className="col-auto">
+                          <i className={`h1 ${category.icon}`} />
+                        </div>
+                        <div className="col-5 ms-n2">
+                          <h4 className="mb-1">
+                            {getTitleLang(locale, category)}
+                          </h4>
+                          {getDescription(category.description) && (
+                            <p className="small text-muted mb-0">
+                              <span className="d-block text-reset text-truncate">
+                                {getDescription(category.description)}
+                              </span>
+                            </p>
+                          )}
+                        </div>
+                        <div className="col-auto"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <div className="card">
@@ -150,9 +249,9 @@ const SettingsCategories: NextPage = () => {
             </div>
             <div className="card-body">
               {!loading ? (
-                data.queryCategory.length > 0 ? (
+                getPrivateCategories().length > 0 ? (
                   <div className="list-group list-group-flush my-n3">
-                    {data.queryCategory.map((category: any) => (
+                    {getPrivateCategories().map((category: any) => (
                       <div key={category.id} className="list-group-item">
                         <div className="row align-items-center">
                           <div className="col-auto">
@@ -185,7 +284,12 @@ const SettingsCategories: NextPage = () => {
               ) : (
                 <div className="text-center mt-3 mb-3">
                   <div className="spinner-border" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="visually-hidden">
+                      {intl.formatMessage({
+                        defaultMessage: "Loading...",
+                        description: "default loading",
+                      })}
+                    </span>
                   </div>
                 </div>
               )}

@@ -1,6 +1,7 @@
 import { memo, forwardRef } from "react";
 import { DateTime } from "luxon";
 import { gql, useQuery, useMutation } from "@apollo/client";
+import { useIntl } from "react-intl";
 import { Dropdown } from "react-bootstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -30,6 +31,8 @@ const DELETE_TRANSACTION_MUTATION = gql`
 const DeleteAlert = withReactContent(Swal);
 
 const RecentTransactions: React.FC = () => {
+  const intl = useIntl();
+
   const [deleteTransaction] = useMutation(DELETE_TRANSACTION_MUTATION);
   const { loading, error, data, refetch } = useQuery(GET_RECENT_TRANSACTIONS, {
     variables: {},
@@ -82,7 +85,12 @@ const RecentTransactions: React.FC = () => {
       {loading ? (
         <div className="card-body text-center">
           <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">
+              {intl.formatMessage({
+                defaultMessage: "Loading...",
+                description: "default loading",
+              })}
+            </span>
           </div>
         </div>
       ) : getList(data).length > 0 ? (

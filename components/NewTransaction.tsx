@@ -1,10 +1,12 @@
 import { Fragment, useState } from "react";
+import { useRouter } from "next/router";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useAuthUser } from "next-firebase-auth";
 import { DateTime } from "luxon";
 import { Modal } from "react-bootstrap";
 import { FormikHelpers } from "formik";
+import { getTitleLang } from "../utils";
 import NewTransactionForm, {
   NewTransactionFormValues,
 } from "../forms/NewTransactionForm";
@@ -37,7 +39,10 @@ const GET_CATEGORIES_QUERY = gql`
   query allCategories {
     queryCategory(order: { desc: createdAt }) {
       id
+      type
       title
+      titleLangEn
+      titleLangJa
     }
   }
 `;
@@ -48,6 +53,7 @@ const NewTransaction: React.FC = () => {
   // Register a keyboard shortcut
   useHotkeys("shift+t", () => setShow(true));
 
+  const { locale } = useRouter();
   const user = useAuthUser();
   const [addTransaction] = useMutation(ADD_TRANSACTION_MUTATION);
   const categories = useQuery(GET_CATEGORIES_QUERY);
@@ -83,6 +89,19 @@ const NewTransaction: React.FC = () => {
     }
   };
 
+  const getCategories = () => {
+    if (categories && categories.data && categories.data.queryCategory) {
+      return categories.data.queryCategory.map((category: any) => {
+        const title =
+          category.type === "DEFAULT"
+            ? getTitleLang(locale, category)
+            : category.title;
+        return { ...category, title };
+      });
+    }
+    return [];
+  };
+
   return (
     <Fragment>
       <button
@@ -108,7 +127,7 @@ const NewTransaction: React.FC = () => {
               onCancel={() => setShow(false)}
               initialValues={{ amount: "" }}
               loading={categories.loading}
-              categories={categories.data?.queryCategory}
+              categories={getCategories()}
             />
           </div>
         </div>
