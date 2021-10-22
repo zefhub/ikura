@@ -80,6 +80,11 @@ const NewTransaction: React.FC = () => {
             id: values.category,
           },
         },
+        refetchQueries: [
+          "totalTransactionsSum",
+          "recentTransactionsTable",
+          "transactionsCount",
+        ],
       });
       // analytics.logEvent("add_transaction");
       setSubmitting(false);

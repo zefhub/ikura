@@ -1,4 +1,5 @@
 import { Formik, Field } from "formik";
+import { DateTime } from "luxon";
 import * as Yup from "yup";
 import Input from "../components/Input";
 
@@ -18,9 +19,18 @@ const validationSchema = Yup.object().shape({
 });
 
 const GeneralSettingsForm: React.FC<GeneralSettingsFormProps> = (props) => {
+  const getBirthday = () => {
+    if (props.initialValues && props.initialValues.birthday) {
+      return DateTime.fromISO(props.initialValues.birthday).toFormat(
+        "yyyy-MM-dd"
+      );
+    }
+    return "";
+  };
+
   return (
     <Formik
-      initialValues={props.initialValues}
+      initialValues={{ ...props.initialValues, birthday: getBirthday() }}
       onSubmit={props.onSubmit}
       validationSchema={validationSchema}
     >

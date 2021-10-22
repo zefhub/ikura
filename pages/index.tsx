@@ -41,7 +41,7 @@ const Home: NextPage = (props) => {
                     <h6 className="text-uppercase text-muted mb-2">
                       Net Worth
                     </h6>
-                    <span className="h2 mb-0">$0</span>
+                    <span className="h2 mb-0">-</span>
                     {false && (
                       <span
                         className="badge bg-success-soft mt-n1"

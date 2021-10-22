@@ -25,7 +25,7 @@ const Navbar: React.FC = () => {
         </StrapNavbar.Toggle>
         <Link href="/">
           <a className="navbar-brand me-auto">
-            <img src="/img/logo.svg" alt="logo" className="navbar-brand-img" />
+            <img src="/img/logo.png" alt="logo" className="navbar-brand-img" />
           </a>
         </Link>
         <NavbarSearch />
@@ -33,7 +33,7 @@ const Navbar: React.FC = () => {
           <Dropdown>
             <Dropdown.Toggle as={CustomToggle}>
               <img
-                src={user?.photoURL || "/img/avatars/profiles/avatar-1.jpg"}
+                src={user?.photoURL || "/img/avatars/default.png"}
                 alt="profile"
                 className="avatar-img rounded-circle"
               />

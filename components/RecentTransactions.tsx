@@ -10,6 +10,7 @@ const GET_RECENT_TRANSACTIONS = gql`
   query recentTransactionsTable {
     queryTransaction(first: 10, order: { desc: when }) {
       id
+      type
       amount
       when
       category {
@@ -61,6 +62,7 @@ const RecentTransactions: React.FC = () => {
     if (isConfirmed) {
       await deleteTransaction({
         variables: { id },
+        refetchQueries: ["totalTransactionsSum"],
       });
       await refetch();
     }
@@ -102,6 +104,9 @@ const RecentTransactions: React.FC = () => {
                   <span className="text-muted list-sort">Amount</span>
                 </th>
                 <th>
+                  <span className="text-muted list-sort">Type</span>
+                </th>
+                <th>
                   <span className="text-muted list-sort">Date</span>
                 </th>
                 <th>
@@ -113,7 +118,28 @@ const RecentTransactions: React.FC = () => {
             <tbody className="list" style={{ borderTop: "0" }}>
               {getList(data).map((transaction: any) => (
                 <tr key={transaction.id}>
-                  <td>{transaction.amount.toLocaleString()} 円</td>
+                  <td>
+                    {intl.formatMessage(
+                      {
+                        defaultMessage: "{amount} $",
+                        description: "monetary amount readout",
+                      },
+                      {
+                        amount: intl.formatNumber(transaction.amount),
+                      }
+                    )}
+                  </td>
+                  <td>
+                    {transaction.type === "EXPENSE"
+                      ? intl.formatMessage({
+                          defaultMessage: "Expense",
+                          description: "recent transactions table",
+                        })
+                      : intl.formatMessage({
+                          defaultMessage: "Income",
+                          description: "recent transactions table",
+                        })}
+                  </td>
                   <td>
                     {DateTime.fromISO(transaction.when).toFormat("dd/MM/yyyy")}
                   </td>

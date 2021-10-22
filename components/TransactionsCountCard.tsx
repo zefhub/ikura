@@ -4,7 +4,7 @@ import { useIntl } from "react-intl";
 import { DateTime } from "luxon";
 
 const GET_TOTOAL_TRANSACTIONS = gql`
-  query totalTransactions($from: DateTime!) {
+  query transactionsCount($from: DateTime!) {
     aggregateTransaction(
       filter: { and: { when: { ge: $from }, type: { eq: EXPENSE } } }
     ) {

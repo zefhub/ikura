@@ -1,7 +1,30 @@
+import type { NextPage } from "next";
 import { useIntl } from "react-intl";
 import Link from "next/link";
 import loadIntlMessages from "../helpers/loadIntlMessages";
-import { InferGetStaticPropsType } from "next";
+
+const Err404: NextPage = () => {
+  const intl = useIntl();
+
+  return (
+    <div className="container">
+      <div className="row justify-content-center">
+        <div className="col-12 col-md-5 col-xl-4 my-5">
+          <div className="text-center">
+            <h6 className="text-uppercase text-muted mb-4">404 error</h6>
+            <h1 className="display-4 mb-3">There’s no page here 😭</h1>
+            <p className="text-muted mb-4">
+              Looks like you ended up here by accident?
+            </p>
+            <Link href="/">
+              <a className="btn btn-lg btn-primary">Return to your dashboard</a>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export async function getStaticProps(ctx: any) {
   return {
@@ -10,30 +33,5 @@ export async function getStaticProps(ctx: any) {
     },
   };
 }
-
-type HomePageProps = InferGetStaticPropsType<typeof getStaticProps>;
-
-const Err404 = (props: HomePageProps) => {
-  const intl = useIntl();
-
-  return (
-    <main>
-      <div className="container mx-auto">
-        <div className="flex flex-col justify-center items-center h-screen">
-          <h2 className="text-blue-500 font-bold">404 ERROR</h2>
-          <h1 className="text-5xl font-bold">Page not found.</h1>
-          <h3 className="text-gray-500 mt-2">
-            Sorry, we could not find the page you are looking for.
-          </h3>
-          <Link href="/">
-            <a className="p-2 pt-4 px-3 font-bold text-blue-500 hover:text-blue-400">
-              Go back home
-            </a>
-          </Link>
-        </div>
-      </div>
-    </main>
-  );
-};
 
 export default Err404;

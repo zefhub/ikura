@@ -1,15 +1,84 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useIntl } from "react-intl";
+import Image from "next/image";
+import { FormikHelpers } from "formik";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useAuthUser, withAuthUser, AuthAction } from "next-firebase-auth";
 import loadIntlMessages from "../../helpers/loadIntlMessages";
-import GeneralSettingsForm from "../../forms/GeneralSettingsForm";
+import avatar from "../../public/img/avatars/default.png";
+import GeneralSettingsForm, {
+  GeneralSettingsFormValues,
+} from "../../forms/GeneralSettingsForm";
+
+const GET_USER_QUERY = gql`
+  query getUser($id: String!) {
+    getUser(id: $id) {
+      id
+      email
+      givenName
+      familyName
+      phone
+      birthday
+    }
+  }
+`;
+
+const UPDATE_USER_MUTATION = gql`
+  mutation updateUser(
+    $id: String!
+    $email: String
+    $givenName: String
+    $familyName: String
+    $phone: String
+    $birthday: DateTime
+  ) {
+    updateUser(
+      input: {
+        filter: { id: { eq: $id } }
+        set: {
+          birthday: $birthday
+          email: $email
+          givenName: $givenName
+          familyName: $familyName
+          phone: $phone
+        }
+      }
+    ) {
+      user {
+        id
+      }
+    }
+  }
+`;
 
 const Settings: NextPage = () => {
   const intl = useIntl();
   const user = useAuthUser();
 
-  const onPersonalInfoSubmit = () => {};
+  const [updateUser] = useMutation(UPDATE_USER_MUTATION);
+  const { loading, error, data } = useQuery(GET_USER_QUERY, {
+    variables: { id: user.id || "" },
+  });
+  if (error) {
+    console.error(error);
+  }
+
+  const onPersonalInfoSubmit = async (
+    values: GeneralSettingsFormValues,
+    { setSubmitting }: FormikHelpers<GeneralSettingsFormValues>
+  ) => {
+    try {
+      await updateUser({
+        variables: {
+          ...values,
+          id: user.id,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="container">
@@ -71,12 +140,10 @@ const Settings: NextPage = () => {
               <div className="row align-items-center">
                 <div className="col-auto">
                   <div className="avatar">
-                    <img
+                    <Image
+                      src={avatar}
+                      alt="profile avatar"
                       className="avatar-img rounded-circle"
-                      src={
-                        user?.photoURL || "img/avatars/profiles/avatar-1.jpg"
-                      }
-                      alt="profile"
                     />
                   </div>
                 </div>
@@ -95,11 +162,22 @@ const Settings: NextPage = () => {
             </div>
           </div>
           <hr className="my-5" />
-          {user?.id && (
-            <GeneralSettingsForm
-              onSubmit={onPersonalInfoSubmit}
-              initialValues={{ email: user?.email, phone: user?.phoneNumber }}
-            />
+          {loading ? (
+            <div className="text-center mt-4">
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : (
+            user?.id && (
+              <GeneralSettingsForm
+                onSubmit={onPersonalInfoSubmit}
+                initialValues={{
+                  ...data.getUser,
+                  email: user?.email,
+                }}
+              />
+            )
           )}
         </div>
       </div>

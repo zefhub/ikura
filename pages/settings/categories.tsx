@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import { useIntl } from "react-intl";
 import Link from "next/link";
 import { FormikHelpers } from "formik";
@@ -10,6 +11,7 @@ import { DateTime } from "luxon";
 import { Modal } from "react-bootstrap";
 import loadIntlMessages from "../../helpers/loadIntlMessages";
 import CategoryForm, { CategoryFormValues } from "../../forms/CategoryForm";
+import logo from "../../public/img/logo.png";
 import { getTitleLang } from "../../utils";
 
 const ADD_CATEGORY_MUTATION = gql`
@@ -86,23 +88,6 @@ const SettingsCategories: NextPage = () => {
           description: values.description,
           createdAt: DateTime.now(),
         },
-        // update: (cache, { data: { addCategory } }) => {
-        //   cache.modify({
-        //     fields: {
-        //       queryCategory(existing = []) {
-        //         const newRef = cache.writeFragment({
-        //           data: addCategory,
-        //           fragment: gql`
-        //             fragment NewCategory on queryCategory {
-        //               id
-        //             }
-        //           `,
-        //         });
-        //         return [newRef, ...existing];
-        //       },
-        //     },
-        //   });
-        // },
       });
       setSubmitting(false);
       setNewCategoryShow(false);
@@ -256,9 +241,9 @@ const SettingsCategories: NextPage = () => {
                         <div className="row align-items-center">
                           <div className="col-auto">
                             <div className="avatar">
-                              <img
-                                src="/img/avatars/profiles/avatar-1.jpg"
-                                alt="..."
+                              <Image
+                                src={logo}
+                                alt="icon"
                                 className="avatar-img rounded-circle"
                               />
                             </div>
