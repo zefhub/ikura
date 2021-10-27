@@ -83,7 +83,7 @@ const Settings: NextPage = () => {
   return (
     <div className="container">
       <div className="row justify-content-center">
-        <div className="col-12 col-lg-10 col-xl-8">
+        <div className="col-12 col-lg-10 col-xl-8 mb-4">
           <div className="header">
             <div className="header-body">
               <div className="row align-items-center">
@@ -173,7 +173,7 @@ const Settings: NextPage = () => {
               <GeneralSettingsForm
                 onSubmit={onPersonalInfoSubmit}
                 initialValues={{
-                  ...data.getUser,
+                  ...(data?.getUser || {}),
                   email: user?.email,
                 }}
               />
