@@ -1,13 +1,15 @@
 import { FieldInputProps } from "formik";
-import { classNames, fieldHasError } from "../utils";
+import { classNames, fieldHasError } from "utils";
 
 export interface InputProps {
   name: string;
   touched: { [key: string]: boolean };
   errors: { [key: string]: string };
-  type: "text" | "number" | "date";
+  type: "text" | "number" | "date" | "email" | "password";
   pattern?: string;
+  className?: string;
   label?: string;
+  placeholder?: string;
   disabled?: boolean;
   readOnly?: boolean;
   tabIndex?: number;
@@ -15,7 +17,7 @@ export interface InputProps {
 
 const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
   return (
-    <div className={classNames("form-group")}>
+    <div className="form-group">
       {props.label && (
         <label className="form-label" htmlFor={`input-${props.name}`}>
           {props.label}
@@ -23,13 +25,14 @@ const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
       )}
       <input
         className={classNames(
-          "form-control",
+          `form-control ${props.className || ""}`,
           fieldHasError(props) ? "is-invalid" : ""
         )}
         id={`input-${props.name}`}
         type={props.type}
         name={props.name}
-        value={props.value || ""}
+        value={props.value}
+        placeholder={props.placeholder}
         pattern={props.pattern}
         onChange={props.onChange}
         onBlur={props.onBlur}

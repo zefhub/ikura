@@ -1,4 +1,4 @@
-import { Fragment, memo } from "react";
+import { memo } from "react";
 import { useIntl } from "react-intl";
 import { gql, useQuery } from "@apollo/client";
 import { DateTime } from "luxon";
@@ -39,45 +39,30 @@ const DailySpendCard: React.FC = () => {
   };
 
   return (
-    <div className="col-12 col-lg-6 col-xl">
-      <div className="card">
-        <div className="card-body">
-          <div className="row align-items-center gx-0">
-            <div className="col">
-              <h6 className="text-uppercase text-muted mb-2">Daily spend</h6>
-              {loading ? (
-                <div className="spinner-border spinner-border-sm" role="status">
-                  <span className="visually-hidden">
-                    {intl.formatMessage({
-                      defaultMessage: "Loading...",
-                      description: "default loading",
-                    })}
-                  </span>
-                </div>
-              ) : (
-                <Fragment>
-                  <span className="h2 mb-0">
-                    {intl.formatMessage(
-                      {
-                        defaultMessage: "{amount} $",
-                        description: "monetary amount readout",
-                      },
-                      {
-                        amount: intl.formatNumber(getAmount()),
-                      }
-                    )}
-                  </span>
-                  {false && (
-                    <span
-                      className="badge bg-danger-soft mt-n1"
-                      style={{ marginLeft: 5 }}
-                    >
-                      +0.3%
-                    </span>
-                  )}
-                </Fragment>
+    <div className="card border-left-primary shadow h-100 py-2">
+      <div className="card-body">
+        <div className="row no-gutters align-items-center">
+          <div className="col mr-2">
+            <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
+              {intl.formatMessage({
+                defaultMessage: "Loading...",
+                description: "default loading",
+              })}
+            </div>
+            <div className="h5 mb-0 font-weight-bold text-gray-800">
+              {intl.formatMessage(
+                {
+                  defaultMessage: "{amount} $",
+                  description: "monetary amount readout",
+                },
+                {
+                  amount: intl.formatNumber(getAmount()),
+                }
               )}
             </div>
+          </div>
+          <div className="col-auto">
+            <i className="fas fa-calendar fa-2x text-gray-300"></i>
           </div>
         </div>
       </div>

@@ -1,8 +1,7 @@
 import type { NextPage } from "next";
 import { useIntl } from "react-intl";
 import Link from "next/link";
-import { withAuthUser, AuthAction } from "next-firebase-auth";
-import loadIntlMessages from "../../helpers/loadIntlMessages";
+import loadIntlMessages from "utils/loadIntlMessages";
 
 const SettingsNotifications: NextPage = () => {
   const intl = useIntl();
@@ -79,6 +78,4 @@ export async function getStaticProps(ctx: any) {
   };
 }
 
-export default withAuthUser({
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
-})(SettingsNotifications);
+export default SettingsNotifications;

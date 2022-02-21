@@ -69,23 +69,14 @@ const RecentTransactions: React.FC = () => {
   };
 
   return (
-    <div className="card">
-      <div className="card-header">
-        <div className="row align-items-center">
-          <div className="col">
-            <h4 className="card-header-title">Recent Transactions</h4>
-          </div>
-          {/*
-          <div className="col-auto">
-            <a href="#!" className="btn btn-sm btn-white">
-              Export
-            </a>
-          </div>
-          */}
-        </div>
+    <div className="card shadow mb-4">
+      <div className="card-header py-3">
+        <h6 className="m-0 font-weight-bold text-primary">
+          Recent Transactions
+        </h6>
       </div>
-      {loading ? (
-        <div className="card-body text-center">
+      <div className="card-body">
+        {loading ? (
           <div className="spinner-border" role="status">
             <span className="visually-hidden">
               {intl.formatMessage({
@@ -94,80 +85,82 @@ const RecentTransactions: React.FC = () => {
               })}
             </span>
           </div>
-        </div>
-      ) : getList(data).length > 0 ? (
-        <div className="table-responsive mb-0">
-          <table className="table table-sm table-nowrap card-table">
-            <thead>
-              <tr>
-                <th>
-                  <span className="text-muted list-sort">Amount</span>
-                </th>
-                <th>
-                  <span className="text-muted list-sort">Type</span>
-                </th>
-                <th>
-                  <span className="text-muted list-sort">Date</span>
-                </th>
-                <th>
-                  <span className="text-muted list-sort">Categories</span>
-                </th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody className="list" style={{ borderTop: "0" }}>
-              {getList(data).map((transaction: any) => (
-                <tr key={transaction.id}>
-                  <td>
-                    {intl.formatMessage(
-                      {
-                        defaultMessage: "{amount} $",
-                        description: "monetary amount readout",
-                      },
-                      {
-                        amount: intl.formatNumber(transaction.amount),
-                      }
-                    )}
-                  </td>
-                  <td>
-                    {transaction.type === "EXPENSE"
-                      ? intl.formatMessage({
-                          defaultMessage: "Expense",
-                          description: "recent transactions table",
-                        })
-                      : intl.formatMessage({
-                          defaultMessage: "Income",
-                          description: "recent transactions table",
-                        })}
-                  </td>
-                  <td>
-                    {DateTime.fromISO(transaction.when).toFormat("dd/MM/yyyy")}
-                  </td>
-                  <td>{transaction.category?.title}</td>
-                  <td className="text-end">
-                    <Dropdown>
-                      <Dropdown.Toggle as={CustomToggle} />
-                      <Dropdown.Menu>
-                        <button
-                          type="button"
-                          className="dropdown-item"
-                          onClick={() => onDelete(transaction.id)}
-                        >
-                          Delete
-                        </button>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </td>
+        ) : getList(data).length > 0 ? (
+          <div className="table-responsive">
+            <table className="table table-bordered">
+              <thead>
+                <tr>
+                  <th>
+                    <span className="text-muted list-sort">Amount</span>
+                  </th>
+                  <th>
+                    <span className="text-muted list-sort">Type</span>
+                  </th>
+                  <th>
+                    <span className="text-muted list-sort">Date</span>
+                  </th>
+                  <th>
+                    <span className="text-muted list-sort">Categories</span>
+                  </th>
+                  <th></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <div className="card-body text-center">
-          <span>No data</span>
-        </div>
-      )}
+              </thead>
+              <tbody className="list" style={{ borderTop: "0" }}>
+                {getList(data).map((transaction: any) => (
+                  <tr key={transaction.id}>
+                    <td>
+                      {intl.formatMessage(
+                        {
+                          defaultMessage: "{amount} $",
+                          description: "monetary amount readout",
+                        },
+                        {
+                          amount: intl.formatNumber(transaction.amount),
+                        }
+                      )}
+                    </td>
+                    <td>
+                      {transaction.type === "EXPENSE"
+                        ? intl.formatMessage({
+                            defaultMessage: "Expense",
+                            description: "recent transactions table",
+                          })
+                        : intl.formatMessage({
+                            defaultMessage: "Income",
+                            description: "recent transactions table",
+                          })}
+                    </td>
+                    <td>
+                      {DateTime.fromISO(transaction.when).toFormat(
+                        "dd/MM/yyyy"
+                      )}
+                    </td>
+                    <td>{transaction.category?.title}</td>
+                    <td className="text-end">
+                      <Dropdown>
+                        <Dropdown.Toggle as={CustomToggle} />
+                        <Dropdown.Menu>
+                          <button
+                            type="button"
+                            className="dropdown-item"
+                            onClick={() => onDelete(transaction.id)}
+                          >
+                            Delete
+                          </button>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="card-body text-center">
+            <span>No data</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

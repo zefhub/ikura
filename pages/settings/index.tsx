@@ -1,15 +1,16 @@
 import type { NextPage } from "next";
+import { useContext } from "react";
 import Link from "next/link";
 import { useIntl } from "react-intl";
 import Image from "next/image";
 import { FormikHelpers } from "formik";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useAuthUser, withAuthUser, AuthAction } from "next-firebase-auth";
-import loadIntlMessages from "../../helpers/loadIntlMessages";
+import loadIntlMessages from "utils/loadIntlMessages";
+import UserContext from "contexts/User";
 import avatar from "../../public/img/avatars/default.png";
 import GeneralSettingsForm, {
   GeneralSettingsFormValues,
-} from "../../forms/GeneralSettingsForm";
+} from "forms/GeneralSettingsForm";
 
 const GET_USER_QUERY = gql`
   query getUser($id: String!) {
@@ -54,11 +55,11 @@ const UPDATE_USER_MUTATION = gql`
 
 const Settings: NextPage = () => {
   const intl = useIntl();
-  const user = useAuthUser();
+  const user = useContext(UserContext);
 
   const [updateUser] = useMutation(UPDATE_USER_MUTATION);
   const { loading, error, data } = useQuery(GET_USER_QUERY, {
-    variables: { id: user.id || "" },
+    variables: { id: user?.uid || "" },
   });
   if (error) {
     console.error(error);
@@ -72,7 +73,7 @@ const Settings: NextPage = () => {
       await updateUser({
         variables: {
           ...values,
-          id: user.id,
+          id: user?.uid,
         },
       });
     } catch (err) {
@@ -169,7 +170,7 @@ const Settings: NextPage = () => {
               </div>
             </div>
           ) : (
-            user?.id && (
+            user?.uid && (
               <GeneralSettingsForm
                 onSubmit={onPersonalInfoSubmit}
                 initialValues={{
@@ -193,6 +194,4 @@ export async function getStaticProps(ctx: any) {
   };
 }
 
-export default withAuthUser({
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
-})(Settings);
+export default Settings;

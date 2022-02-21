@@ -1,96 +1,68 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
-import { forwardRef } from "react";
+import React, { useContext } from "react";
 import { useRouter } from "next/router";
 import { useIntl } from "react-intl";
-import { useAuthUser } from "next-firebase-auth";
+import { getAuth } from "firebase/auth";
+import toast from "react-hot-toast";
 import Link from "next/link";
-import { Navbar as StrapNavbar, Nav, Dropdown } from "react-bootstrap";
-import NavbarSearch from "./NavbarSearch";
-import { classNames } from "../utils";
+import { Navbar as BsNavbar, Nav, Dropdown } from "react-bootstrap";
+import UserContext from "contexts/User";
+import DropdownToggle from "components/DropdownToggle";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
+  const user = useContext(UserContext);
   const intl = useIntl();
-  const user = useAuthUser();
+  const auth = getAuth();
 
-  if (!user.id) {
+  const onLogout = async () => {
+    try {
+      await auth.signOut();
+      toast.success("signed out");
+      router.push("/signin");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (!user) {
     return null;
   }
 
   return (
-    <StrapNavbar expand="lg">
-      <div className="container">
-        <StrapNavbar.Toggle className="me-auto" aria-controls="navbar">
-          <span className="navbar-toggler-icon" />
-        </StrapNavbar.Toggle>
-        <Link href="/">
-          <a className="navbar-brand me-auto">
-            <img src="/img/logo.png" alt="logo" className="navbar-brand-img" />
-          </a>
-        </Link>
-        <NavbarSearch />
-        <div className="navbar-user">
-          <Dropdown>
-            <Dropdown.Toggle as={CustomToggle}>
-              <img
-                src={user?.photoURL || "/img/avatars/default.png"}
-                alt="profile"
-                className="avatar-img rounded-circle"
-              />
-            </Dropdown.Toggle>
-            <Dropdown.Menu className="dropdown-menu-end mt-3">
-              <Link href="/settings">
-                <a className="dropdown-item">
-                  {intl.formatMessage({
-                    defaultMessage: "Settings",
-                    description: "navbar dropdown option",
-                  })}
-                </a>
-              </Link>
-              <hr className="dropdown-divider" />
-              <a onClick={() => user.signOut()} className="dropdown-item">
-                {intl.formatMessage({
-                  defaultMessage: "Logout",
-                  description: "navbar dropdown option",
-                })}
-              </a>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-        <StrapNavbar.Collapse className="me-lg-auto order-lg-first">
-          <Nav>
-            <Link href="/">
-              <a
-                className={classNames(
-                  "nav-link",
-                  router.asPath === "/" && "active"
-                )}
-              >
-                {intl.formatMessage({
-                  defaultMessage: "Dashboard",
-                  description: "navbar",
-                })}
+    <BsNavbar className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+      <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
+      <ul className="navbar-nav ml-auto">
+        <Dropdown className="nav-item no-arrow">
+          <Dropdown.Toggle as={DropdownToggle} className="nav-link">
+            <span className="mr-2 d-none d-lg-inline text-gray-600 small">
+              {auth.currentUser?.displayName || auth.currentUser?.email}
+            </span>
+            <img
+              className="img-profile rounded-circle"
+              src={
+                auth.currentUser?.photoURL ||
+                "https://startbootstrap.github.io/startbootstrap-sb-admin-2/img/undraw_profile.svg"
+              }
+              alt="profile"
+            />
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Link href="/settings">
+              <a className="dropdown-item">
+                <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                &nbsp;Account
               </a>
             </Link>
-          </Nav>
-        </StrapNavbar.Collapse>
-      </div>
-    </StrapNavbar>
+            <div className="dropdown-divider" />
+            <button type="button" className="dropdown-item" onClick={onLogout}>
+              <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+              &nbsp;Logout
+            </button>
+          </Dropdown.Menu>
+        </Dropdown>
+      </ul>
+    </BsNavbar>
   );
 };
-
-// eslint-disable-next-line react/display-name
-const CustomToggle = forwardRef(({ children, onClick }: any, ref: any) => (
-  <a
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-    className="avatar avatar-sm dropdown-toggle"
-  >
-    {children}
-  </a>
-));
 
 export default Navbar;

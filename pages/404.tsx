@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useIntl } from "react-intl";
 import Link from "next/link";
-import loadIntlMessages from "../helpers/loadIntlMessages";
+import loadIntlMessages from "utils/loadIntlMessages";
 
 const Err404: NextPage = () => {
   const intl = useIntl();

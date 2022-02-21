@@ -1,15 +1,16 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useContext } from "react";
 import { useRouter } from "next/router";
+import { useIntl } from "react-intl";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useAuthUser } from "next-firebase-auth";
 import { DateTime } from "luxon";
 import { Modal } from "react-bootstrap";
 import { FormikHelpers } from "formik";
-import { getTitleLang } from "../utils";
+import { getTitleLang } from "utils";
+import UserContext from "contexts/User";
 import NewTransactionForm, {
   NewTransactionFormValues,
-} from "../forms/NewTransactionForm";
+} from "forms/NewTransactionForm";
 
 const ADD_TRANSACTION_MUTATION = gql`
   mutation addTransaction(
@@ -48,13 +49,15 @@ const GET_CATEGORIES_QUERY = gql`
 `;
 
 const NewTransaction: React.FC = () => {
+  const intl = useIntl();
+  const { locale } = useRouter();
+  const user = useContext(UserContext);
+
   const [show, setShow] = useState<boolean>(false);
 
   // Register a keyboard shortcut
   useHotkeys("shift+t", () => setShow(true));
 
-  const { locale } = useRouter();
-  const user = useAuthUser();
   const [addTransaction] = useMutation(ADD_TRANSACTION_MUTATION);
   const categories = useQuery(GET_CATEGORIES_QUERY);
 
@@ -71,7 +74,7 @@ const NewTransaction: React.FC = () => {
       await addTransaction({
         variables: {
           user: {
-            id: user?.id,
+            id: user?.uid,
           },
           type: "EXPENSE",
           amount: Number(values.amount),
@@ -114,7 +117,10 @@ const NewTransaction: React.FC = () => {
         className="btn btn-primary lift"
         onClick={() => setShow(true)}
       >
-        New Expense
+        {intl.formatMessage({
+          defaultMessage: "Expense",
+          description: "new expense button",
+        })}
       </button>
       <Modal
         show={show}

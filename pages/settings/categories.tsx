@@ -1,18 +1,18 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useIntl } from "react-intl";
 import Link from "next/link";
 import { FormikHelpers } from "formik";
-import { useAuthUser, withAuthUser, AuthAction } from "next-firebase-auth";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { DateTime } from "luxon";
 import { Modal } from "react-bootstrap";
-import loadIntlMessages from "../../helpers/loadIntlMessages";
-import CategoryForm, { CategoryFormValues } from "../../forms/CategoryForm";
+import UserContext from "contexts/User";
+import loadIntlMessages from "utils/loadIntlMessages";
+import CategoryForm, { CategoryFormValues } from "forms/CategoryForm";
 import logo from "../../public/img/logo.png";
-import { getTitleLang } from "../../utils";
+import { getTitleLang } from "utils";
 
 const ADD_CATEGORY_MUTATION = gql`
   mutation addCategory(
@@ -64,7 +64,8 @@ const SettingsCategories: NextPage = () => {
 
   const { locale } = useRouter();
   const intl = useIntl();
-  const user = useAuthUser();
+  const user = useContext(UserContext);
+
   const [addCategory] = useMutation(ADD_CATEGORY_MUTATION);
   const { loading, error, data, refetch } = useQuery(GET_CATEGORIES_QUERY);
 
@@ -81,7 +82,7 @@ const SettingsCategories: NextPage = () => {
       await addCategory({
         variables: {
           user: {
-            id: user?.id,
+            id: user?.uid,
           },
           type: "PRIVATE",
           title: values.title,
@@ -312,6 +313,4 @@ export async function getStaticProps(ctx: any) {
   };
 }
 
-export default withAuthUser({
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
-})(SettingsCategories);
+export default SettingsCategories;

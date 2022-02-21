@@ -6,6 +6,9 @@ module.exports = {
     defaultLocale: "en",
     localeDetection: true,
   },
+  images: {
+    domains: [],
+  },
   webpack(config, { dev, ...other }) {
     if (!dev) {
       // https://formatjs.io/docs/guides/advanced-usage#react-intl-without-parser-40-smaller

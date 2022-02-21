@@ -1,84 +1,76 @@
 import type { NextPage } from "next";
-import { Fragment } from "react";
 import { useIntl } from "react-intl";
-import {
-  withAuthUser,
-  AuthAction,
-  withAuthUserTokenSSR,
-} from "next-firebase-auth";
-import loadIntlMessages from "../helpers/loadIntlMessages";
-import NewTransaction from "../components/NewTransaction";
-import Header from "../components/Header";
-import TransactionsCountCard from "../components/TransactionsCountCard";
-import DailySpendCard from "../components/DailySpendCard";
-import TotalSpendCard from "../components/TotalSpendCard";
-import RecentTransactions from "../components/RecentTransactions";
+import loadIntlMessages from "utils/loadIntlMessages";
+import NewTransaction from "components/NewTransaction";
+import TransactionsCountCard from "components/TransactionsCountCard";
+import DailySpendCard from "components/DailySpendCard";
+import TotalSpendCard from "components/TotalSpendCard";
+import RecentTransactions from "components/RecentTransactions";
 
 const Home: NextPage = (props) => {
   const intl = useIntl();
 
   return (
-    <Fragment>
-      <Header
-        title={intl.formatMessage({
-          defaultMessage: "Dashboard",
-          description: "index header title",
-        })}
-        subTitle={intl.formatMessage({
-          defaultMessage: "Overview",
-          description: "index header subTitle",
-        })}
-      >
-        <NewTransaction />
-      </Header>
-      <div className="container">
-        <div className="row">
-          <div className="col-12 col-lg-6 col-xl">
-            <div className="card">
-              <div className="card-body">
-                <div className="row align-items-center gx-0">
-                  <div className="col">
-                    <h6 className="text-uppercase text-muted mb-2">
-                      Net Worth
-                    </h6>
-                    <span className="h2 mb-0">-</span>
-                    {false && (
-                      <span
-                        className="badge bg-success-soft mt-n1"
-                        style={{ marginLeft: 5 }}
-                      >
-                        +3.5%
-                      </span>
-                    )}
+    <div className="container-fluid">
+      <div className="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 className="h3 mb-0 text-gray-800">
+          {intl.formatMessage({
+            defaultMessage: "Dashboard",
+            description: "index page title",
+          })}
+        </h1>
+        <a
+          href="#"
+          className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+        >
+          <i className="fas fa-plus fa-sm text-white-50"></i> New Transaction
+        </a>
+      </div>
+      <div className="row">
+        <div className="col-xl-3 col-md-6 mb-4">
+          <div className="card border-left-primary shadow h-100 py-2">
+            <div className="card-body">
+              <div className="row no-gutters align-items-center">
+                <div className="col mr-2">
+                  <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Net Worth
                   </div>
+                  <div className="h5 mb-0 font-weight-bold text-gray-800">
+                    $40,000
+                  </div>
+                </div>
+                <div className="col-auto">
+                  <i className="fas fa-calendar fa-2x text-gray-300"></i>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        <div className="col-xl-3 col-md-6 mb-4">
           <TotalSpendCard />
+        </div>
+        <div className="col-xl-3 col-md-6 mb-4">
           <DailySpendCard />
+        </div>
+        <div className="col-xl-3 col-md-6 mb-4">
           <TransactionsCountCard />
         </div>
-        <div className="row">
-          <div className="col-12">
-            <RecentTransactions />
-          </div>
+      </div>
+      <div className="row">
+        <div className="col-12">
+          <RecentTransactions />
         </div>
       </div>
-    </Fragment>
+    </div>
   );
 };
 
-export const getServerSideProps = withAuthUserTokenSSR({
-  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-})(async (ctx: any) => {
+export const getServerSideProps = async (ctx: any) => {
   return {
     props: {
       intlMessages: await loadIntlMessages(ctx),
     },
   };
-});
+};
 
-export default withAuthUser({
-  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
-})(Home);
+export default Home;

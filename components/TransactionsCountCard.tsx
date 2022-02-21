@@ -31,14 +31,14 @@ const TransactionsCountCard: React.FC = () => {
   };
 
   return (
-    <div className="col-12 col-lg-6 col-xl">
-      <div className="card">
-        <div className="card-body">
-          <div className="row align-items-center gx-0">
-            <div className="col">
-              <h6 className="text-uppercase text-muted mb-2">
-                Count Purchases
-              </h6>
+    <div className="card border-left-primary shadow h-100 py-2">
+      <div className="card-body">
+        <div className="row no-gutters align-items-center">
+          <div className="col mr-2">
+            <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
+              Count Purchases
+            </div>
+            <div className="h5 mb-0 font-weight-bold text-gray-800">
               {loading ? (
                 <div className="spinner-border spinner-border-sm" role="status">
                   <span className="visually-hidden">
@@ -52,6 +52,9 @@ const TransactionsCountCard: React.FC = () => {
                 <span className="h2 mb-0">{getCount()}</span>
               )}
             </div>
+          </div>
+          <div className="col-auto">
+            <i className="fas fa-calendar fa-2x text-gray-300"></i>
           </div>
         </div>
       </div>
