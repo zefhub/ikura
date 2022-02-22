@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 import {
   getAuth,
   signInWithEmailAndPassword,
   signInWithPopup,
+  linkWithPopup,
   setPersistence,
   browserLocalPersistence,
   GoogleAuthProvider,
@@ -12,8 +14,7 @@ import {
 } from "firebase/auth";
 import { useIntl } from "react-intl";
 import firebaseApp from "lib/firebase";
-import loadIntlMessages from "utils/loadIntlMessages";
-import SignupForm, { SignupFormValues } from "forms/SignupForm";
+import SigninForm, { SigninFormValues } from "forms/SigninForm";
 
 const Signup: NextPage = () => {
   const intl = useIntl();
@@ -28,7 +29,7 @@ const Signup: NextPage = () => {
     }
   };
 
-  const onLogin = async (values: SignupFormValues) => {
+  const onLogin = async (values: SigninFormValues) => {
     try {
       await authPersistence();
       await await signInWithEmailAndPassword(
@@ -37,8 +38,9 @@ const Signup: NextPage = () => {
         values.password
       );
       router.push("/");
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast.error(error.message);
     }
   };
 
@@ -48,18 +50,23 @@ const Signup: NextPage = () => {
       await authPersistence();
       await signInWithPopup(auth, provider);
       router.push("/");
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.log(error.message);
+      if (error.code === "auth/account-exists-with-different-credential") {
+        console.error(error.code);
+      } else {
+        console.error(error);
+      }
     }
   };
 
   const onFacebookLogin = async () => {
+    const provider = new FacebookAuthProvider();
     try {
-      const provider = new FacebookAuthProvider();
       await authPersistence();
-      await signInWithPopup(auth, provider);
+      const user = await signInWithPopup(auth, provider);
       router.push("/");
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
     }
   };
@@ -82,7 +89,7 @@ const Signup: NextPage = () => {
                         })}
                       </h1>
                     </div>
-                    <SignupForm onSubmit={onLogin} />
+                    <SigninForm onSubmit={onLogin} />
                     <hr />
                     <button
                       type="button"
@@ -132,15 +139,5 @@ const Signup: NextPage = () => {
     </div>
   );
 };
-
-/*
-export async function getStaticProps(ctx: any) {
-  return {
-    props: {
-      intlMessages: await loadIntlMessages(ctx),
-    },
-  };
-}
-*/
 
 export default Signup;

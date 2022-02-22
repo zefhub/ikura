@@ -2,12 +2,12 @@ import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import Input from "components/Input";
 
-export interface SignupFormProps {
-  onSubmit: (values: SignupFormValues) => Promise<void>;
+export interface SigninFormProps {
+  onSubmit: (values: SigninFormValues) => Promise<void>;
   initialValues?: any;
 }
 
-export type SignupFormValues = {
+export type SigninFormValues = {
   email: string;
   password: string;
 };
@@ -19,7 +19,7 @@ const validationSchema = Yup.object().shape({
     .required("Password is required"),
 });
 
-const SignupForm: React.FC<SignupFormProps> = (props) => {
+const SigninForm: React.FC<SigninFormProps> = (props) => {
   return (
     <Formik
       initialValues={props.initialValues}
@@ -55,4 +55,4 @@ const SignupForm: React.FC<SignupFormProps> = (props) => {
   );
 };
 
-export default SignupForm;
+export default SigninForm;

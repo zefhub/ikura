@@ -3,21 +3,41 @@
     "defaultMessage": "General",
     "description": "settings menu general"
   },
+  "1FjMUC": {
+    "defaultMessage": "Forgot Password?",
+    "description": "forgot password link"
+  },
   "4f3Ha0": {
     "defaultMessage": "Notifications",
     "description": "settings menu notifications"
+  },
+  "6fyJfu": {
+    "defaultMessage": "Income",
+    "description": "recent transactions table"
+  },
+  "BA+pR5": {
+    "defaultMessage": "Dashboard",
+    "description": "index page title"
   },
   "CHu6Xm": {
     "defaultMessage": "Total Spend (month)",
     "description": "TotalSpendCard title"
   },
-  "HXoCik": {
-    "defaultMessage": "Settings",
-    "description": "navbar dropdown option"
+  "Ov5n7/": {
+    "defaultMessage": "Login with Google",
+    "description": "login with google button"
   },
-  "M4hPoZ": {
-    "defaultMessage": "Dashboard",
-    "description": "navbar"
+  "SnPbSY": {
+    "defaultMessage": "Expense",
+    "description": "new expense button"
+  },
+  "WiNWgq": {
+    "defaultMessage": "Transactions",
+    "description": "transactions header title"
+  },
+  "ZvR3j+": {
+    "defaultMessage": "Expense",
+    "description": "recent transactions table"
   },
   "a9m3iY": {
     "defaultMessage": "{amount} $",
@@ -27,13 +47,13 @@
     "defaultMessage": "Loading...",
     "description": "default loading"
   },
-  "jyUN7v": {
-    "defaultMessage": "Overview",
-    "description": "index header subTitle"
+  "bzWGcA": {
+    "defaultMessage": "Login with Facebook",
+    "description": "login with facebook button"
   },
-  "kDqURM": {
-    "defaultMessage": "Logout",
-    "description": "navbar dropdown option"
+  "hY6xbQ": {
+    "defaultMessage": "Welcome Back!",
+    "description": "signup page title"
   },
   "kHTW+/": {
     "defaultMessage": "Settings",
@@ -43,8 +63,8 @@
     "defaultMessage": "Categories",
     "description": "settings menu categories"
   },
-  "yMjntE": {
-    "defaultMessage": "Dashboard",
-    "description": "index header title"
+  "tQ+miu": {
+    "defaultMessage": "Overview",
+    "description": "transactions header subTitle"
   }
 }

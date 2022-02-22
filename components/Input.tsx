@@ -32,10 +32,10 @@ const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
         type={props.type}
         name={props.name}
         value={props.value}
-        placeholder={props.placeholder}
-        pattern={props.pattern}
         onChange={props.onChange}
         onBlur={props.onBlur}
+        placeholder={props.placeholder}
+        pattern={props.pattern}
         disabled={props.disabled}
         tabIndex={props.tabIndex}
         readOnly={props.readOnly}
