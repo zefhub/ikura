@@ -87,73 +87,84 @@ const RecentTransactions: React.FC = () => {
           </div>
         ) : getList(data).length > 0 ? (
           <div className="table-responsive">
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>
-                    <span className="text-muted list-sort">Amount</span>
-                  </th>
-                  <th>
-                    <span className="text-muted list-sort">Type</span>
-                  </th>
-                  <th>
-                    <span className="text-muted list-sort">Date</span>
-                  </th>
-                  <th>
-                    <span className="text-muted list-sort">Categories</span>
-                  </th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody className="list" style={{ borderTop: "0" }}>
-                {getList(data).map((transaction: any) => (
-                  <tr key={transaction.id}>
-                    <td>
-                      {intl.formatMessage(
-                        {
-                          defaultMessage: "{amount} $",
-                          description: "monetary amount readout",
-                        },
-                        {
-                          amount: intl.formatNumber(transaction.amount),
-                        }
-                      )}
-                    </td>
-                    <td>
-                      {transaction.type === "EXPENSE"
-                        ? intl.formatMessage({
-                            defaultMessage: "Expense",
-                            description: "recent transactions table",
-                          })
-                        : intl.formatMessage({
-                            defaultMessage: "Income",
-                            description: "recent transactions table",
-                          })}
-                    </td>
-                    <td>
-                      {DateTime.fromISO(transaction.when).toFormat(
-                        "dd/MM/yyyy"
-                      )}
-                    </td>
-                    <td>{transaction.category?.title}</td>
-                    <td className="text-end">
-                      <Dropdown>
-                        <Dropdown.Toggle as={CustomToggle} />
-                        <Dropdown.Menu>
-                          <button
-                            type="button"
-                            className="dropdown-item"
-                            onClick={() => onDelete(transaction.id)}
-                          >
-                            Delete
-                          </button>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="row">
+              <div className="col-12">
+                <table className="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>
+                        <span className="text-muted list-sort">Amount</span>
+                      </th>
+                      <th>
+                        <span className="text-muted list-sort">Type</span>
+                      </th>
+                      <th>
+                        <span className="text-muted list-sort">Date</span>
+                      </th>
+                      <th>
+                        <span className="text-muted list-sort">Categories</span>
+                      </th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody className="list" style={{ borderTop: "0" }}>
+                    {getList(data).map((transaction: any) => (
+                      <tr key={transaction.id}>
+                        <td>
+                          {intl.formatMessage(
+                            {
+                              defaultMessage: "{amount} $",
+                              description: "monetary amount readout",
+                            },
+                            {
+                              amount: intl.formatNumber(transaction.amount),
+                            }
+                          )}
+                        </td>
+                        <td>
+                          {transaction.type === "EXPENSE"
+                            ? intl.formatMessage({
+                                defaultMessage: "Expense",
+                                description: "recent transactions table",
+                              })
+                            : intl.formatMessage({
+                                defaultMessage: "Income",
+                                description: "recent transactions table",
+                              })}
+                        </td>
+                        <td>
+                          {DateTime.fromISO(transaction.when).toFormat(
+                            "dd/MM/yyyy"
+                          )}
+                        </td>
+                        <td>{transaction.category?.title}</td>
+                        <td className="text-end">
+                          <Dropdown>
+                            <Dropdown.Toggle as={CustomToggle} />
+                            <Dropdown.Menu>
+                              <button
+                                type="button"
+                                className="dropdown-item"
+                                onClick={() => onDelete(transaction.id)}
+                              >
+                                Delete
+                              </button>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <div className="dataTables_info" role="status">
+                  Showing 1 to 10 of 57 entries
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="card-body text-center">

@@ -1,8 +1,7 @@
-import { Fragment, useState, useContext } from "react";
+import { useContext } from "react";
 import { useRouter } from "next/router";
 import { useIntl } from "react-intl";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useHotkeys } from "react-hotkeys-hook";
 import { DateTime } from "luxon";
 import { Modal } from "react-bootstrap";
 import { FormikHelpers } from "formik";
@@ -48,15 +47,15 @@ const GET_CATEGORIES_QUERY = gql`
   }
 `;
 
-const NewTransaction: React.FC = () => {
+export interface NewTransactionProps {
+  show: boolean;
+  onHide: (arg: boolean) => void;
+}
+
+const NewTransaction: React.FC<NewTransactionProps> = (props) => {
   const intl = useIntl();
   const { locale } = useRouter();
   const user = useContext(UserContext);
-
-  const [show, setShow] = useState<boolean>(false);
-
-  // Register a keyboard shortcut
-  useHotkeys("shift+t", () => setShow(true));
 
   const [addTransaction] = useMutation(ADD_TRANSACTION_MUTATION);
   const categories = useQuery(GET_CATEGORIES_QUERY);
@@ -91,7 +90,7 @@ const NewTransaction: React.FC = () => {
       });
       // analytics.logEvent("add_transaction");
       setSubmitting(false);
-      setShow(false);
+      props.onHide(false);
     } catch (err) {
       console.error(err);
     }
@@ -111,39 +110,25 @@ const NewTransaction: React.FC = () => {
   };
 
   return (
-    <Fragment>
-      <button
-        type="button"
-        className="btn btn-primary lift"
-        onClick={() => setShow(true)}
-      >
-        {intl.formatMessage({
-          defaultMessage: "Expense",
-          description: "new expense button",
-        })}
-      </button>
-      <Modal
-        show={show}
-        onHide={() => setShow(false)}
-        backdrop="static"
-        keyboard
-      >
-        <div className="modal-card card">
-          <div className="card-header">
-            <h4 className="card-header-title">Reigster Expense</h4>
-          </div>
-          <div className="card-body" style={{ maxHeight: "none" }}>
-            <NewTransactionForm
-              onSubmit={onSubmit}
-              onCancel={() => setShow(false)}
-              initialValues={{ amount: "" }}
-              loading={categories.loading}
-              categories={getCategories()}
-            />
-          </div>
+    <Modal
+      show={props.show}
+      onHide={() => props.onHide(false)}
+      backdrop="static"
+      keyboard
+    >
+      <div className="modal-card card">
+        <div className="card-header text-primary">Reigster Expense</div>
+        <div className="card-body" style={{ maxHeight: "none" }}>
+          <NewTransactionForm
+            onSubmit={onSubmit}
+            onCancel={() => props.onHide(false)}
+            initialValues={{ amount: "" }}
+            loading={categories.loading}
+            categories={getCategories()}
+          />
         </div>
-      </Modal>
-    </Fragment>
+      </div>
+    </Modal>
   );
 };
 

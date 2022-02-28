@@ -1,8 +1,11 @@
 import React, { useContext } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import classNames from "classnames";
 import UserContext from "contexts/User";
 
 const Sidebar = () => {
+  const router = useRouter();
   const user = useContext(UserContext);
 
   if (!user) {
@@ -17,7 +20,9 @@ const Sidebar = () => {
         </a>
       </Link>
       <hr className="sidebar-divider my-0" />
-      <li className="nav-item active">
+      <li
+        className={classNames("nav-item", { active: router.pathname === "/" })}
+      >
         <Link href="/">
           <a className="nav-link">
             <i className="fas fa-fw fa-tachometer-alt"></i>
@@ -26,7 +31,11 @@ const Sidebar = () => {
         </Link>
       </li>
       <hr className="sidebar-divider my-0" />
-      <li className="nav-item">
+      <li
+        className={classNames("nav-item", {
+          active: router.pathname === "/transactions",
+        })}
+      >
         <Link href="/transactions">
           <a className="nav-link">
             <i className="fas fa-fw fa-coins"></i>

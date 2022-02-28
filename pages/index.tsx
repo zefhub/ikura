@@ -1,14 +1,20 @@
 import type { NextPage } from "next";
+import { useState } from "react";
 import { useIntl } from "react-intl";
-import loadIntlMessages from "utils/loadIntlMessages";
+import { useHotkeys } from "react-hotkeys-hook";
 import NewTransaction from "components/NewTransaction";
 import TransactionsCountCard from "components/TransactionsCountCard";
 import DailySpendCard from "components/DailySpendCard";
 import TotalSpendCard from "components/TotalSpendCard";
 import RecentTransactions from "components/RecentTransactions";
 
-const Home: NextPage = (props) => {
+const Home: NextPage = () => {
   const intl = useIntl();
+
+  const [showNewTransaction, setShowNewTransaction] = useState<boolean>(false);
+
+  // Register a keyboard shortcuts
+  useHotkeys("shift+t", () => setShowNewTransaction(true));
 
   return (
     <div className="container-fluid">
@@ -19,12 +25,21 @@ const Home: NextPage = (props) => {
             description: "index page title",
           })}
         </h1>
-        <a
-          href="#"
+        <button
+          type="button"
           className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+          onClick={() => setShowNewTransaction(true)}
         >
-          <i className="fas fa-plus fa-sm text-white-50"></i> New Transaction
-        </a>
+          <i className="fas fa-plus fa-sm text-white-50"></i>&nbsp;
+          {intl.formatMessage({
+            defaultMessage: "New Transaction",
+            description: "index page new transaction button",
+          })}
+        </button>
+        <NewTransaction
+          show={showNewTransaction}
+          onHide={() => setShowNewTransaction(false)}
+        />
       </div>
       <div className="row">
         <div className="col-xl-3 col-md-6 mb-4">
@@ -63,14 +78,6 @@ const Home: NextPage = (props) => {
       </div>
     </div>
   );
-};
-
-export const getServerSideProps = async (ctx: any) => {
-  return {
-    props: {
-      intlMessages: await loadIntlMessages(ctx),
-    },
-  };
 };
 
 export default Home;
