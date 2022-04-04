@@ -1,43 +1,26 @@
 {
-  "+6biWd": {
-    "defaultMessage": "General",
-    "description": "settings menu general"
+  "078WAr": {
+    "defaultMessage": "See all"
   },
-  "1FjMUC": {
-    "defaultMessage": "Forgot Password?",
-    "description": "forgot password link"
+  "5ARyR8": {
+    "defaultMessage": "Personal Finance",
+    "description": "signin tag-line"
   },
-  "4f3Ha0": {
-    "defaultMessage": "Notifications",
-    "description": "settings menu notifications"
-  },
-  "6fyJfu": {
-    "defaultMessage": "Income",
-    "description": "recent transactions table"
-  },
-  "BA+pR5": {
-    "defaultMessage": "Dashboard",
-    "description": "index page title"
+  "7vsu1w": {
+    "defaultMessage": "Sign in with Facebook"
   },
   "CHu6Xm": {
     "defaultMessage": "Total Spend (month)",
     "description": "TotalSpendCard title"
   },
-  "Ov5n7/": {
-    "defaultMessage": "Login with Google",
-    "description": "login with google button"
+  "GMkXVd": {
+    "defaultMessage": "Recent Transactions"
   },
-  "SnPbSY": {
-    "defaultMessage": "Expense",
-    "description": "new expense button"
+  "Op5EHr": {
+    "defaultMessage": "Sign in with Google"
   },
-  "WiNWgq": {
-    "defaultMessage": "Transactions",
-    "description": "transactions header title"
-  },
-  "ZvR3j+": {
-    "defaultMessage": "Expense",
-    "description": "recent transactions table"
+  "URe+qA": {
+    "defaultMessage": "Expense"
   },
   "a9m3iY": {
     "defaultMessage": "{amount} $",
@@ -47,24 +30,7 @@
     "defaultMessage": "Loading...",
     "description": "default loading"
   },
-  "bzWGcA": {
-    "defaultMessage": "Login with Facebook",
-    "description": "login with facebook button"
-  },
-  "hY6xbQ": {
-    "defaultMessage": "Welcome Back!",
-    "description": "signup page title"
-  },
-  "kHTW+/": {
-    "defaultMessage": "Settings",
-    "description": "settings page-header settings"
-  },
-  "o30WaQ": {
-    "defaultMessage": "Categories",
-    "description": "settings menu categories"
-  },
-  "tQ+miu": {
-    "defaultMessage": "Overview",
-    "description": "transactions header subTitle"
+  "gJkHZk": {
+    "defaultMessage": "Income"
   }
 }

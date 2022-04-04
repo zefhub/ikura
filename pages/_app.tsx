@@ -1,6 +1,4 @@
-import "styles/sb-admin-2/scss/sb-admin-2.scss";
-import "styles/sb-admin-2/vendor/fontawesome-free/css/all.min.css";
-import "sweetalert2/src/sweetalert2.scss";
+import "styles/global.scss";
 import "firebase/analytics";
 import type { AppProps } from "next/app";
 import React, { useState, useEffect } from "react";
@@ -8,17 +6,14 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
 import { IntlProvider } from "react-intl";
-import classNames from "classnames";
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from "lib/apolloClient";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import firebaseApp from "lib/firebase";
 import { UserContext } from "contexts/User";
-import Sidebar from "components/Sidebar";
-import Navbar from "components/Navbar";
-import Footer from "components/Footer";
 import Loading from "components/Loading";
+import MobileNavbar from "components/MobileNavbar";
 
 function CustomApp({ Component, pageProps }: AppProps) {
   const { locale, defaultLocale, replace, pathname } = useRouter();
@@ -56,15 +51,9 @@ function CustomApp({ Component, pageProps }: AppProps) {
           <title>Ikura</title>
         </Head>
         <UserContext.Provider value={user}>
-          <div id="wrapper" className={classNames("", { "vh-100": loading })}>
-            <Sidebar />
-            <div id="content-wrapper" className="d-flex flex-column">
-              <div className="content">
-                <Navbar />
-                {loading ? <Loading /> : <Component {...pageProps} />}
-              </div>
-              <Footer />
-            </div>
+          <div className="h-screen md:h-full">
+            {loading ? <Loading /> : <Component {...pageProps} />}
+            {user && <MobileNavbar />}
           </div>
         </UserContext.Provider>
         <Toaster />
