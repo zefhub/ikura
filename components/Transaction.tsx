@@ -1,7 +1,9 @@
 import React from "react";
 import { useIntl } from "react-intl";
 
-const Transaction: React.FC = () => {
+export interface TransactionProps {}
+
+const Transaction: React.FC<TransactionProps> = (props) => {
   const intl = useIntl();
 
   return (
