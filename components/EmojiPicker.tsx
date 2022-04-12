@@ -1,6 +1,11 @@
+import dynamic from "next/dynamic";
 import React from "react";
 import { useField } from "formik";
-import Picker, { IEmojiData } from "emoji-picker-react";
+import { IEmojiData } from "emoji-picker-react";
+
+const DynamicPicker = dynamic(() => import("emoji-picker-react"), {
+  ssr: false,
+});
 
 export interface EmojiPickerProps {
   name: string;
@@ -19,7 +24,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = (props) => {
 
   return (
     <div className="w-full flex flex-row justify-center mb-2">
-      <Picker onEmojiClick={onSelect} disableSkinTonePicker />
+      <DynamicPicker onEmojiClick={onSelect} disableSkinTonePicker />
     </div>
   );
 };
