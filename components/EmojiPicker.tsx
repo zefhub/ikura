@@ -18,7 +18,6 @@ const EmojiPicker: React.FC<EmojiPickerProps> = (props) => {
     event: React.MouseEvent<Element, MouseEvent>,
     data: IEmojiData
   ) => {
-    console.log(data);
     helpers.setValue(data.emoji);
   };
 

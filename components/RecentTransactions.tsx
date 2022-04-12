@@ -2,23 +2,14 @@ import React, { Fragment } from "react";
 import Link from "next/link";
 import { useIntl } from "react-intl";
 import { toast } from "react-hot-toast";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { GET_TRANSACTIONS } from "constants/queries";
 import Transaction from "components/Transaction";
 import Loading from "components/Loading";
 
-const TRANSACTIONS_QUERY = gql`
-  query RecentTransactions {
-    queryTransaction {
-      id
-      amount
-      date
-    }
-  }
-`;
-
 const RecentTransactions: React.FC = () => {
   const intl = useIntl();
-  const { data, loading, error } = useQuery(TRANSACTIONS_QUERY);
+  const { data, loading, error } = useQuery(GET_TRANSACTIONS);
   if (error) {
     console.error(error);
     toast.error(error.message);
@@ -47,7 +38,12 @@ const RecentTransactions: React.FC = () => {
           ) : (
             <Fragment>
               {data.queryTransaction.map((transaction: any) => (
-                <Transaction key={transaction.id} />
+                <Transaction
+                  key={transaction.id}
+                  category={transaction.category}
+                  amount={transaction.amount}
+                  date={transaction.date}
+                />
               ))}
             </Fragment>
           )}

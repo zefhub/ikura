@@ -7,7 +7,7 @@ import Button from "components/Button";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
-  date: Yup.date().required("Required"),
+  icon: Yup.string().required("Required"),
 });
 
 export interface CategoryFormProps {
@@ -15,7 +15,10 @@ export interface CategoryFormProps {
   initialValues?: any;
 }
 
-export type CategoryFormValues = {};
+export type CategoryFormValues = {
+  name?: string;
+  icon?: string;
+};
 
 const CategoryForm: React.FC<CategoryFormProps> = (props) => {
   const intl = useIntl();

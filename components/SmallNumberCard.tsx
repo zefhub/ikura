@@ -17,6 +17,7 @@ const SmallNumberCard: React.FC<SmallNumberCardProps> = (props) => {
         {
           "bg-green-300": props.amount > 0,
           "bg-red-200": props.amount < 0,
+          "bg-slate-200": props.amount === 0,
         }
       )}
     >

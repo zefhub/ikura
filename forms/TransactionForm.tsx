@@ -4,23 +4,15 @@ import { toast } from "react-hot-toast";
 import Link from "next/link";
 import { gql, useQuery } from "@apollo/client";
 import * as Yup from "yup";
+import { GET_CATEGORIES } from "constants/queries";
 import Input from "components/Input";
 import Button from "components/Button";
 import Loading from "components/Loading";
 
-const GET_CATEGORIES = gql`
-  query GetCategories {
-    queryCategory {
-      id
-      name
-      icon
-    }
-  }
-`;
-
 const validationSchema = Yup.object().shape({
   amount: Yup.number().required("Required"),
   date: Yup.date().required("Required"),
+  category: Yup.string().required("Required"),
 });
 
 export interface TransactionFormProps {
@@ -28,7 +20,11 @@ export interface TransactionFormProps {
   initialValues?: any;
 }
 
-export type TransactionFormValues = {};
+export type TransactionFormValues = {
+  amount?: number;
+  date?: Date;
+  category?: string;
+};
 
 const TransactionForm: React.FC<TransactionFormProps> = (props) => {
   const intl = useIntl();
@@ -56,7 +52,13 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
           label="Amount"
           className="mb-4"
         />
-        <Field as={Input} name="date" type="date" label="Date" />
+        <Field
+          as={Input}
+          name="date"
+          type="date"
+          label="Date"
+          className="mb-4"
+        />
         {!data.queryCategory.length ? (
           <Link href="/account/categories">
             <a className="self-center px-6 py-6 mt-12 mb-12 rounded-full drop-shadow-lg bg-gradient-to-br from-ikura-light to-ikura-dark text-white">
@@ -74,10 +76,10 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
                 <Field
                   type="radio"
                   name="category"
-                  value="One"
+                  value={category.id}
                   className="mr-2"
                 />
-                Test
+                {category.name}
               </label>
             ))}
           </div>

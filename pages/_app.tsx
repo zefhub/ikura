@@ -6,14 +6,22 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
 import { IntlProvider } from "react-intl";
-import { ApolloProvider } from "@apollo/client";
+import { ApolloProvider, gql } from "@apollo/client";
 import { useApollo } from "lib/apolloClient";
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import firebaseApp from "lib/firebase";
-import { UserContext } from "contexts/User";
+import { UserContext, User } from "contexts/User";
 import Loading from "components/Loading";
 import MobileNavbar from "components/MobileNavbar";
+
+const GET_USER = gql`
+  query queryUser($filter: UserFilter) {
+    queryUser(filter: $filter) {
+      id
+    }
+  }
+`;
 
 function CustomApp({ Component, pageProps }: AppProps) {
   const { locale, defaultLocale, replace, pathname } = useRouter();
@@ -24,14 +32,32 @@ function CustomApp({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const analytics = getAnalytics(firebaseApp);
+    getAnalytics(firebaseApp);
 
-    onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-      if (!user && pathname !== "/signin" && pathname !== "/signup") {
-        replace("/signin");
-      }
+    onAuthStateChanged(auth, (user: any) => {
+      apolloClient
+        .query({
+          query: GET_USER,
+          variables: { filter: { firebaseID: { eq: user.uid } } },
+        })
+        .then((firebaseUser: any) => {
+          // Make sure we have a user
+          if (
+            firebaseUser.data.queryUser &&
+            firebaseUser.data.queryUser.length > 0
+          ) {
+            setUser({
+              ...user,
+              id: firebaseUser.data.queryUser[0].id,
+            });
+            setLoading(false);
+          }
+
+          // Redirect if not loged in
+          if (!user && pathname !== "/signin" && pathname !== "/signup") {
+            replace("/signin");
+          }
+        });
     });
   }, []);
 

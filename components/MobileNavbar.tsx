@@ -1,8 +1,10 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useContext } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useIntl } from "react-intl";
 import classNames from "classnames";
 import { gql, useMutation } from "@apollo/client";
+import toast from "react-hot-toast";
 import { Dialog } from "@headlessui/react";
 import {
   House,
@@ -11,24 +13,51 @@ import {
   AccountCircle,
   Add,
 } from "@mui/icons-material";
+import { GET_TRANSACTIONS } from "constants/queries";
+import UserContext from "contexts/User";
 import TransactionForm, { TransactionFormValues } from "forms/TransactionForm";
 
 const ADD_TRANSACTION = gql`
-  mutation AddTransaction($input: TransactionInput!) {
+  mutation AddTransaction($input: [AddTransactionInput!]!) {
     addTransaction(input: $input) {
-      id
+      transaction {
+        id
+      }
     }
   }
 `;
 
 const MobileNavbar: React.FC = () => {
+  const intl = useIntl();
   const { pathname } = useRouter();
+  const user = useContext(UserContext);
   const [addTransaction] = useMutation(ADD_TRANSACTION, {});
 
   const [open, setOpen] = useState<boolean>(false);
 
   const onNewTransaction = async (values: TransactionFormValues) => {
-    console.log(values);
+    try {
+      await addTransaction({
+        variables: {
+          input: [
+            {
+              amount: values.amount,
+              date: values.date,
+              category: { id: values.category },
+              user: { id: user?.id },
+            },
+          ],
+        },
+        refetchQueries: [GET_TRANSACTIONS],
+      });
+      toast.success(
+        intl.formatMessage({ defaultMessage: "Transaction added" })
+      );
+      setOpen(false);
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message);
+    }
   };
 
   return (

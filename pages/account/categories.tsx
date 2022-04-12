@@ -1,36 +1,60 @@
 import type { NextPage } from "next";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useContext } from "react";
 import { useIntl } from "react-intl";
 import { Dialog } from "@headlessui/react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useMutation } from "@apollo/client";
 import { ArrowBack, Add } from "@mui/icons-material";
+import UserContext from "contexts/User";
+import { GET_CATEGORIES } from "constants/queries";
 import Category from "components/Category";
 import Loading from "components/Loading";
-import CategoryForm from "forms/CategoryForm";
+import CategoryForm, { CategoryFormValues } from "forms/CategoryForm";
 
-const GET_CATEGORIES = gql`
-  query GetCategories {
-    queryCategory {
-      id
-      name
-      icon
+const ADD_CATEGORY = gql`
+  mutation addCategory($input: [AddCategoryInput!]!) {
+    addCategory(input: $input) {
+      count
     }
   }
 `;
 
 const Categories: NextPage = () => {
   const intl = useIntl();
+  const user = useContext(UserContext);
   const [open, setOpen] = useState<boolean>(false);
+  const [addCategory] = useMutation(ADD_CATEGORY, {
+    refetchQueries: [GET_CATEGORIES],
+  });
 
   const { data, loading, error } = useQuery(GET_CATEGORIES);
   if (error) {
     toast.error(error.message);
   }
 
-  const onCategorySubmit = async (values: any) => {
-    console.log(values);
+  const onCategorySubmit = async (values: CategoryFormValues) => {
+    try {
+      await addCategory({
+        variables: {
+          input: [
+            {
+              name: values.name,
+              icon: values.icon,
+              created: new Date(),
+              user: {
+                firebaseID: user?.id,
+              },
+            },
+          ],
+        },
+      });
+      toast.success(intl.formatMessage({ defaultMessage: "Category added" }));
+      setOpen(false);
+    } catch (err: any) {
+      console.log(err);
+      toast.error(err.message);
+    }
   };
 
   return (
@@ -49,20 +73,21 @@ const Categories: NextPage = () => {
         {loading ? (
           <Loading />
         ) : (
-          <div className="grid grid-cols-3">
+          <div className="grid grid-cols-3 place-items-center">
             {data.queryCategory.map((category: any) => (
               <Category
                 key={category.id}
                 id={category.id}
                 name={category.name}
                 icon={category.icon}
+                className="mb-5"
               />
             ))}
+            <button type="button" onClick={() => setOpen(true)}>
+              <Category id="" name="New" icon={<Add />} className="mb-5" />
+            </button>
           </div>
         )}
-        <button type="button" onClick={() => setOpen(true)}>
-          <Category id="" name="New" icon={<Add />} />
-        </button>
       </div>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <Dialog.Overlay className="z-40 fixed inset-0 bg-black opacity-30" />
