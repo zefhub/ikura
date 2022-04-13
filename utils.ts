@@ -10,14 +10,3 @@ export const fieldHasError = (props: any): boolean => {
   // }
   return false;
 };
-
-export const getTitleLang = (locale?: string, category?: any): string => {
-  switch (locale) {
-    case "en":
-      return category.titleLangEn;
-    case "ja":
-      return category.titleLangJa;
-    default:
-      return category.titleLangEn;
-  }
-};

@@ -1,6 +1,4 @@
-import "styles/sb-admin-2/scss/sb-admin-2.scss";
-import "styles/sb-admin-2/vendor/fontawesome-free/css/all.min.css";
-import "sweetalert2/src/sweetalert2.scss";
+import "styles/global.scss";
 import "firebase/analytics";
 import type { AppProps } from "next/app";
 import React, { useState, useEffect } from "react";
@@ -8,17 +6,25 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { Toaster } from "react-hot-toast";
 import { IntlProvider } from "react-intl";
-import classNames from "classnames";
-import { ApolloProvider } from "@apollo/client";
+import { ApolloProvider, gql } from "@apollo/client";
 import { useApollo } from "lib/apolloClient";
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import firebaseApp from "lib/firebase";
-import { UserContext } from "contexts/User";
-import Sidebar from "components/Sidebar";
-import Navbar from "components/Navbar";
-import Footer from "components/Footer";
+import { UserContext, User } from "contexts/User";
+import { GET_USER } from "constants/queries";
 import Loading from "components/Loading";
+import MobileNavbar from "components/MobileNavbar";
+
+const ADD_USER = gql`
+  mutation addUser($input: UserInput!) {
+    addUser(input: $input) {
+      user {
+        id
+      }
+    }
+  }
+`;
 
 function CustomApp({ Component, pageProps }: AppProps) {
   const { locale, defaultLocale, replace, pathname } = useRouter();
@@ -29,11 +35,44 @@ function CustomApp({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const analytics = getAnalytics(firebaseApp);
+    getAnalytics(firebaseApp);
 
-    onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
+    onAuthStateChanged(auth, (user: any) => {
+      apolloClient
+        .query({
+          query: GET_USER,
+          variables: { filter: { firebaseID: { eq: user.uid } } },
+        })
+        .then((firebaseUser: any) => {
+          // Make sure we have a user
+          if (
+            firebaseUser.data.queryUser &&
+            firebaseUser.data.queryUser.length > 0
+          ) {
+            setUser({
+              ...user,
+              id: firebaseUser.data.queryUser[0].id,
+            });
+            setLoading(false);
+          } else {
+            apolloClient
+              .mutation({
+                query: ADD_USER,
+                variables: {
+                  input: [{ firebaseID: user.uid }],
+                },
+              })
+              .then((addUser: any) => {
+                setUser({
+                  ...user,
+                  id: addUser.data.addUser[0].id,
+                });
+                setLoading(false);
+              });
+          }
+        });
+
+      // Redirect if not loged in
       if (!user && pathname !== "/signin" && pathname !== "/signup") {
         replace("/signin");
       }
@@ -56,15 +95,11 @@ function CustomApp({ Component, pageProps }: AppProps) {
           <title>Ikura</title>
         </Head>
         <UserContext.Provider value={user}>
-          <div id="wrapper" className={classNames("", { "vh-100": loading })}>
-            <Sidebar />
-            <div id="content-wrapper" className="d-flex flex-column">
-              <div className="content">
-                <Navbar />
-                {loading ? <Loading /> : <Component {...pageProps} />}
-              </div>
-              <Footer />
+          <div className="h-screen md:h-full">
+            <div className="pb-12">
+              {loading ? <Loading /> : <Component {...pageProps} />}
             </div>
+            {user && <MobileNavbar />}
           </div>
         </UserContext.Provider>
         <Toaster />

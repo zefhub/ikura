@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { FieldInputProps } from "formik";
 import { classNames, fieldHasError } from "utils";
 
@@ -17,15 +18,17 @@ export interface InputProps {
 
 const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
   return (
-    <div className="form-group">
+    <Fragment>
       {props.label && (
-        <label className="form-label" htmlFor={`input-${props.name}`}>
+        <label className="" htmlFor={`input-${props.name}`}>
           {props.label}
         </label>
       )}
       <input
         className={classNames(
-          `form-control ${props.className || ""}`,
+          `mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 ${
+            props.className || ""
+          }`,
           fieldHasError(props) ? "is-invalid" : ""
         )}
         id={`input-${props.name}`}
@@ -43,7 +46,7 @@ const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
       {fieldHasError(props) && (
         <div className="invalid-feedback">{props.errors[props.name]}</div>
       )}
-    </div>
+    </Fragment>
   );
 };
 
