@@ -37,43 +37,49 @@ function CustomApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     getAnalytics(firebaseApp);
 
+    // TODO: Clean this up
     onAuthStateChanged(auth, (user: any) => {
-      apolloClient
-        .query({
-          query: GET_USER,
-          variables: { filter: { firebaseID: { eq: user.uid } } },
-        })
-        .then((firebaseUser: any) => {
-          // Make sure we have a user
-          if (
-            firebaseUser.data.queryUser &&
-            firebaseUser.data.queryUser.length > 0
-          ) {
-            setUser({
-              ...user,
-              id: firebaseUser.data.queryUser[0].id,
-            });
-            setLoading(false);
-          } else {
-            apolloClient
-              .mutation({
-                query: ADD_USER,
-                variables: {
-                  input: [{ firebaseID: user.uid }],
-                },
-              })
-              .then((addUser: any) => {
-                setUser({
-                  ...user,
-                  id: addUser.data.addUser[0].id,
-                });
-                setLoading(false);
+      if (user) {
+        apolloClient
+          .query({
+            query: GET_USER,
+            variables: { filter: { firebaseID: { eq: user?.uid } } },
+          })
+          .then((firebaseUser: any) => {
+            // Make sure we have a user
+            if (
+              firebaseUser.data.queryUser &&
+              firebaseUser.data.queryUser.length > 0
+            ) {
+              setUser({
+                ...user,
+                id: firebaseUser.data.queryUser[0].id,
               });
-          }
-        });
+              setLoading(false);
+            } else {
+              apolloClient
+                .mutation({
+                  query: ADD_USER,
+                  variables: {
+                    input: [{ firebaseID: user.uid }],
+                  },
+                })
+                .then((addUser: any) => {
+                  console.log("linked firebase user to zef user");
+                  setUser({
+                    ...user,
+                    id: addUser.data.addUser[0].id,
+                  });
+                  setLoading(false);
+                });
+            }
+          });
+      } else {
+        setLoading(false);
+      }
 
       // Redirect if not loged in
-      if (!user && pathname !== "/signin" && pathname !== "/signup") {
+      if (!user && pathname !== "/signin") {
         replace("/signin");
       }
     });
