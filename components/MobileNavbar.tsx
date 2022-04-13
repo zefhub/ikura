@@ -13,7 +13,10 @@ import {
   AccountCircle,
   Add,
 } from "@mui/icons-material";
-import { GET_TRANSACTIONS } from "constants/queries";
+import {
+  GET_TRANSACTIONS,
+  TRANSACTION_AMOUNT_AGGREGATE,
+} from "constants/queries";
 import UserContext from "contexts/User";
 import TransactionForm, { TransactionFormValues } from "forms/TransactionForm";
 
@@ -48,7 +51,7 @@ const MobileNavbar: React.FC = () => {
             },
           ],
         },
-        refetchQueries: [GET_TRANSACTIONS],
+        refetchQueries: [GET_TRANSACTIONS, TRANSACTION_AMOUNT_AGGREGATE],
       });
       toast.success(
         intl.formatMessage({ defaultMessage: "Transaction added" })
@@ -62,7 +65,7 @@ const MobileNavbar: React.FC = () => {
 
   return (
     <Fragment>
-      <div className="w-full h-12 absolute bottom-0 shadow-reversed bg-white">
+      <div className="w-full h-12 fixed bottom-0 shadow-reversed bg-white">
         <div className="h-full flex flex-row items-center justify-between px-6">
           <Link href="/">
             <a

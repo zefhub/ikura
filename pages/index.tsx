@@ -30,8 +30,6 @@ const Home: NextPage = () => {
     toast.error(expenseError.message);
   }
 
-  console.log(income);
-
   return (
     <div className="flex flex-col items-center p-5">
       <LargeNumberCard />

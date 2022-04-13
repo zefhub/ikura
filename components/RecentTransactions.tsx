@@ -16,7 +16,7 @@ const RecentTransactions: React.FC = () => {
   }
 
   return (
-    <div className="w-full my-3">
+    <div className="w-full overflow-y-scroll my-3">
       <div className="flex flex-row justify-between items-center">
         <h3 className="font-semibold">
           {intl.formatMessage({ defaultMessage: "Recent Transactions" })}

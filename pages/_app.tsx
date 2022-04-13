@@ -12,13 +12,16 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import firebaseApp from "lib/firebase";
 import { UserContext, User } from "contexts/User";
+import { GET_USER } from "constants/queries";
 import Loading from "components/Loading";
 import MobileNavbar from "components/MobileNavbar";
 
-const GET_USER = gql`
-  query queryUser($filter: UserFilter) {
-    queryUser(filter: $filter) {
-      id
+const ADD_USER = gql`
+  mutation addUser($input: UserInput!) {
+    addUser(input: $input) {
+      user {
+        id
+      }
     }
   }
 `;
@@ -51,13 +54,28 @@ function CustomApp({ Component, pageProps }: AppProps) {
               id: firebaseUser.data.queryUser[0].id,
             });
             setLoading(false);
-          }
-
-          // Redirect if not loged in
-          if (!user && pathname !== "/signin" && pathname !== "/signup") {
-            replace("/signin");
+          } else {
+            apolloClient
+              .mutation({
+                query: ADD_USER,
+                variables: {
+                  input: [{ firebaseID: user.uid }],
+                },
+              })
+              .then((addUser: any) => {
+                setUser({
+                  ...user,
+                  id: addUser.data.addUser[0].id,
+                });
+                setLoading(false);
+              });
           }
         });
+
+      // Redirect if not loged in
+      if (!user && pathname !== "/signin" && pathname !== "/signup") {
+        replace("/signin");
+      }
     });
   }, []);
 
@@ -78,7 +96,9 @@ function CustomApp({ Component, pageProps }: AppProps) {
         </Head>
         <UserContext.Provider value={user}>
           <div className="h-screen md:h-full">
-            {loading ? <Loading /> : <Component {...pageProps} />}
+            <div className="pb-12">
+              {loading ? <Loading /> : <Component {...pageProps} />}
+            </div>
             {user && <MobileNavbar />}
           </div>
         </UserContext.Provider>

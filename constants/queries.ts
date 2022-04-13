@@ -31,3 +31,11 @@ export const TRANSACTION_AMOUNT_AGGREGATE = gql`
     }
   }
 `;
+
+export const GET_USER = gql`
+  query queryUser($filter: UserFilter) {
+    queryUser(filter: $filter) {
+      id
+    }
+  }
+`;
