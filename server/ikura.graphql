@@ -1,8 +1,8 @@
-type User {
-  #@auth(
-  #  query: "z >> RT.FirebaseID | value | equals[info.context['auth']['USER_ID']]"
-  #  add: "params['firebaseID'] == info.context['auth']['USER_ID']"
-  #)
+type User
+  @auth(
+    query: "z >> RT.FirebaseID | value | equals[info.context['auth']['USER_ID']]"
+    add: "params['firebaseID'] == info.context['auth']['USER_ID']"
+  ) {
   firebaseID: String! @unique @search
   email: String @unique
   givenName: String
@@ -14,7 +14,11 @@ type User {
     @relation(source: "Transaction", rt: "User", target: "User")
 }
 
-type Transaction {
+type Transaction
+  @auth(
+    query: "z >> RT.FirebaseID | value | equals[info.context['auth']['USER_ID']]"
+    add: "params['firebaseID'] == info.context['auth']['USER_ID']"
+  ) {
   user: User @relation(source: "Transaction", rt: "User", target: "User")
   category: Category
     @relation(source: "Transaction", rt: "Category", target: "Category")
@@ -32,11 +36,12 @@ type Category {
   created: DateTime
 }
 
-#type _Auth @details(
-#  JWKURL: "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"
-#  Audience: "ikura-9437c"
-#  Header: "X-Auth-Token"
-#  Namespace: "https://dgraph.io/jwt/claims"
-#  ) {
-#  dummy: String
-#}
+type _Auth
+  @details(
+    JWKURL: "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"
+    Audience: "ikura-9437c"
+    Header: "X-Auth-Token"
+    Namespace: "https://dgraph.io/jwt/claims"
+  ) {
+  dummy: String
+}

@@ -44,6 +44,6 @@ ADD backend .
 
 RUN --mount=type=secret,id=gitcredentials bash get_zefdb.sh zef v0.15.2-rc6 'zef-.*cp310'
 
-EXPOSE 5010
+EXPOSE 5001
 
 ENTRYPOINT ["python3", "-mzef.gql.simplegql", "--port", "5001", "--create", "ikura.graphql", "ikura-production"]
