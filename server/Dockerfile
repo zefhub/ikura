@@ -46,4 +46,4 @@ RUN --mount=type=secret,id=gitcredentials bash get_zefdb.sh zef v0.15.2-rc6 'zef
 
 EXPOSE 5010
 
-ENTRYPOINT ["python3", "run_api.py"]
+ENTRYPOINT ["python3", "-mzef.gql.simplegql", "--port", "5001", "--create", "ikura.graphql", "ikura-production"]
