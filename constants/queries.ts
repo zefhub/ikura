@@ -24,6 +24,14 @@ export const GET_TRANSACTIONS = gql`
   }
 `;
 
+export const GET_USER = gql`
+  query queryUser($filter: UserFilter) {
+    queryUser(filter: $filter) {
+      id
+    }
+  }
+`;
+
 export const TRANSACTION_AMOUNT_AGGREGATE = gql`
   query TransactionAmountAggregate($filter: TransactionFilter) {
     aggregateTransaction(filter: $filter) {
@@ -32,10 +40,12 @@ export const TRANSACTION_AMOUNT_AGGREGATE = gql`
   }
 `;
 
-export const GET_USER = gql`
-  query queryUser($filter: UserFilter) {
-    queryUser(filter: $filter) {
+/*
+export const ANALYTICS_CATEGORIES_SUM = gql`
+  query analyticsCategoriesSum($filter: TransactionFilter) {
+    queryCategories(filter: $filter) {
       id
     }
   }
 `;
+*/

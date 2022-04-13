@@ -28,7 +28,7 @@ const Transaction: React.FC<TransactionProps> = (props) => {
         </div>
       </div>
       <h1 className="text-lg font-semibold text-green-700">
-        + $ {intl.formatNumber(props.amount)}
+        $ {intl.formatNumber(props.amount)}
       </h1>
     </div>
   );

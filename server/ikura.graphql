@@ -1,0 +1,42 @@
+type User {
+  #@auth(
+  #  query: "z >> RT.FirebaseID | value | equals[info.context['auth']['USER_ID']]"
+  #  add: "params['firebaseID'] == info.context['auth']['USER_ID']"
+  #)
+  firebaseID: String! @unique @search
+  email: String @unique
+  givenName: String
+  familyName: String
+  phone: String
+  birthday: DateTime
+  transactions: [Transaction]
+    @incoming
+    @relation(source: "Transaction", rt: "User", target: "User")
+}
+
+type Transaction {
+  user: User @relation(source: "Transaction", rt: "User", target: "User")
+  category: Category
+    @relation(source: "Transaction", rt: "Category", target: "Category")
+  amount: Int @search
+  date: DateTime
+}
+
+type Category {
+  user: User @relation(source: "Category", rt: "User", target: "User")
+  transactions: [Transaction]
+    @incoming
+    @relation(source: "Transaction", rt: "Category", target: "Category")
+  name: String
+  icon: String
+  created: DateTime
+}
+
+#type _Auth @details(
+#  JWKURL: "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"
+#  Audience: "ikura-9437c"
+#  Header: "X-Auth-Token"
+#  Namespace: "https://dgraph.io/jwt/claims"
+#  ) {
+#  dummy: String
+#}
