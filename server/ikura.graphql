@@ -1,9 +1,14 @@
 type User
   @auth(
-    query: "z >> RT.FirebaseID | value | equals[info.context['auth']['USER_ID']]"
-    add: "params['firebaseID'] == info.context['auth']['USER_ID']"
+    query: """
+    (z >> RT.FirebaseId
+    | value
+    | equals[info.context
+            | get_in[('auth', 'USER_ID')][None]
+            | collect])
+    """
   ) {
-  firebaseID: String! @unique @search
+  firebaseId: String! @unique @search
   email: String @unique
   givenName: String
   familyName: String
@@ -16,8 +21,13 @@ type User
 
 type Transaction
   @auth(
-    query: "z >> RT.FirebaseID | value | equals[info.context['auth']['USER_ID']]"
-    add: "params['firebaseID'] == info.context['auth']['USER_ID']"
+    query: """
+    (z >> RT.User >> RT.FirebaseId
+    | value
+    | equals[info.context
+            | get_in[('auth', 'USER_ID')][None]
+            | collect])
+    """
   ) {
   user: User @relation(source: "Transaction", rt: "User", target: "User")
   category: Category
@@ -26,7 +36,18 @@ type Transaction
   date: DateTime
 }
 
-type Category {
+type Category
+  @auth(
+    query: """
+    (Or
+    [Not[has_out[RT.User]]]
+    [Z >> RT.User >> RT.FirebaseId
+    | value
+    | equals[info.context
+              | get_in[('auth', 'USER_ID')][None]
+              | collect]])
+    """
+  ) {
   user: User @relation(source: "Category", rt: "User", target: "User")
   transactions: [Transaction]
     @incoming
