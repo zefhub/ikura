@@ -17,7 +17,7 @@ import Loading from "components/Loading";
 import MobileNavbar from "components/MobileNavbar";
 
 const ADD_USER = gql`
-  mutation addUser($input: UserInput!) {
+  mutation addUser($input: [AddUserInput!]!) {
     addUser(input: $input) {
       user {
         id
@@ -59,7 +59,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
             } else {
               apolloClient
                 .mutate({
-                  query: ADD_USER,
+                  mutation: ADD_USER,
                   variables: {
                     input: [{ firebaseID: user.uid }],
                   },
@@ -68,13 +68,14 @@ function CustomApp({ Component, pageProps }: AppProps) {
                   console.log("linked firebase user to zef user");
                   setUser({
                     ...user,
-                    id: addUser.data.addUser[0].id,
+                    id: addUser.data.addUser.user[0].id,
                   });
                   setLoading(false);
                 });
             }
           });
       } else {
+        setUser(null);
         setLoading(false);
       }
 
