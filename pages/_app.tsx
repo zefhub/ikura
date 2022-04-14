@@ -58,7 +58,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
               setLoading(false);
             } else {
               apolloClient
-                .mutation({
+                .mutate({
                   query: ADD_USER,
                   variables: {
                     input: [{ firebaseID: user.uid }],
