@@ -4,7 +4,7 @@ import type { AppProps } from "next/app";
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { IntlProvider } from "react-intl";
 import { ApolloProvider, gql } from "@apollo/client";
 import { useApollo } from "lib/apolloClient";
@@ -40,10 +40,26 @@ function CustomApp({ Component, pageProps }: AppProps) {
     // TODO: Clean this up
     onAuthStateChanged(auth, (user: any) => {
       if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+
+      // Redirect if not loged in
+      if (!user && pathname !== "/signin") {
+        replace("/signin");
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      if (user) {
         apolloClient
           .query({
             query: GET_USER,
-            variables: { filter: { firebaseID: { eq: user?.uid } } },
+            variables: { filter: { firebaseId: { eq: user?.uid } } },
           })
           .then((firebaseUser: any) => {
             // Make sure we have a user
@@ -61,11 +77,11 @@ function CustomApp({ Component, pageProps }: AppProps) {
                 .mutate({
                   mutation: ADD_USER,
                   variables: {
-                    input: [{ firebaseID: user.uid }],
+                    input: [{ firebaseId: user.uid }],
                   },
                 })
                 .then((addUser: any) => {
-                  console.log("linked firebase user to zef user");
+                  console.log("linked firebase user to zef user", addUser);
                   setUser({
                     ...user,
                     id: addUser.data.addUser.user[0].id,
@@ -73,18 +89,16 @@ function CustomApp({ Component, pageProps }: AppProps) {
                   setLoading(false);
                 });
             }
+          })
+          .catch((err: any) => {
+            console.error(err);
+            toast.error(err.message);
           });
-      } else {
-        setUser(null);
-        setLoading(false);
       }
+    }
+  }, [loading, user]);
 
-      // Redirect if not loged in
-      if (!user && pathname !== "/signin") {
-        replace("/signin");
-      }
-    });
-  }, []);
+  console.log("loading", loading);
 
   return (
     <IntlProvider

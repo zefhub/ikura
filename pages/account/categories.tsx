@@ -43,7 +43,7 @@ const Categories: NextPage = () => {
               icon: values.icon,
               created: new Date(),
               user: {
-                firebaseID: user?.id,
+                id: user?.id,
               },
             },
           ],

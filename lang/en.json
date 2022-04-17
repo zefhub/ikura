@@ -2,6 +2,9 @@
   "078WAr": {
     "defaultMessage": "See all"
   },
+  "0iB3Cs": {
+    "defaultMessage": "Transaction added"
+  },
   "5ARyR8": {
     "defaultMessage": "Personal Finance",
     "description": "signin tag-line"
@@ -9,12 +12,23 @@
   "7vsu1w": {
     "defaultMessage": "Sign in with Facebook"
   },
-  "CHu6Xm": {
-    "defaultMessage": "Total Spend (month)",
-    "description": "TotalSpendCard title"
+  "CG3a47": {
+    "defaultMessage": "All transactions"
+  },
+  "D3idYv": {
+    "defaultMessage": "Settings"
   },
   "GMkXVd": {
     "defaultMessage": "Recent Transactions"
+  },
+  "GZJpDf": {
+    "defaultMessage": "Analytics"
+  },
+  "LgAx49": {
+    "defaultMessage": "Category added"
+  },
+  "MTfefh": {
+    "defaultMessage": "No transactions"
   },
   "Op5EHr": {
     "defaultMessage": "Sign in with Google"
@@ -22,15 +36,19 @@
   "URe+qA": {
     "defaultMessage": "Expense"
   },
-  "a9m3iY": {
-    "defaultMessage": "{amount} $",
-    "description": "monetary amount readout"
+  "VKb1MS": {
+    "defaultMessage": "Categories"
   },
-  "bQAtuf": {
-    "defaultMessage": "Loading...",
-    "description": "default loading"
+  "dXSivY": {
+    "defaultMessage": "My account"
   },
   "gJkHZk": {
     "defaultMessage": "Income"
+  },
+  "lbpe3v": {
+    "defaultMessage": "Signed out"
+  },
+  "xXbJso": {
+    "defaultMessage": "Sign out"
   }
 }
