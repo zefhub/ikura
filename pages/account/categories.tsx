@@ -8,6 +8,7 @@ import { gql, useQuery, useMutation } from "@apollo/client";
 import { ArrowBack, Add } from "@mui/icons-material";
 import UserContext from "contexts/User";
 import { GET_CATEGORIES } from "constants/queries";
+import Protected from "components/Protected";
 import Category from "components/Category";
 import Loading from "components/Loading";
 import CategoryForm, { CategoryFormValues } from "forms/CategoryForm";
@@ -58,7 +59,7 @@ const Categories: NextPage = () => {
   };
 
   return (
-    <Fragment>
+    <Protected>
       <div className="flex flex-col px-4">
         <div className="flex flex-row justify-start items-center mt-4 mb-6">
           <Link href="/account">
@@ -95,7 +96,7 @@ const Categories: NextPage = () => {
           <CategoryForm onSubmit={onCategorySubmit} initialValues={{}} />
         </div>
       </Dialog>
-    </Fragment>
+    </Protected>
   );
 };
 

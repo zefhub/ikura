@@ -3,6 +3,7 @@ import { useIntl } from "react-intl";
 import { useQuery } from "@apollo/client";
 import toast from "react-hot-toast";
 import { TRANSACTION_AMOUNT_AGGREGATE } from "constants/queries";
+import Protected from "components/Protected";
 import LargeNumberCard from "components/LargeNumberCard";
 import SmallNumberCard from "components/SmallNumberCard";
 import RecentTransactions from "components/RecentTransactions";
@@ -31,16 +32,20 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className="flex flex-col items-center p-5">
-      <LargeNumberCard />
-      <div className="w-full flex flex-row justify-between">
-        <SmallNumberCard amount={income?.aggregateTransaction.amountSum || 0} />
-        <SmallNumberCard
-          amount={expense?.aggregateTransaction.amountSum || 0}
-        />
+    <Protected>
+      <div className="flex flex-col items-center p-5">
+        <LargeNumberCard />
+        <div className="w-full flex flex-row justify-between">
+          <SmallNumberCard
+            amount={income?.aggregateTransaction.amountSum || 0}
+          />
+          <SmallNumberCard
+            amount={expense?.aggregateTransaction.amountSum || 0}
+          />
+        </div>
+        <RecentTransactions />
       </div>
-      <RecentTransactions />
-    </div>
+    </Protected>
   );
 };
 

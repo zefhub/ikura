@@ -1,55 +1,25 @@
-import type { NextPage } from "next";
+import type { NextPage, GetServerSidePropsContext } from "next";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { signIn, getSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import {
-  getAuth,
-  signInWithPopup,
-  linkWithPopup,
-  setPersistence,
-  browserLocalPersistence,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-} from "firebase/auth";
 import { useIntl } from "react-intl";
-import firebaseApp from "lib/firebase";
 import Button from "components/Button";
 
 const Signup: NextPage = () => {
   const intl = useIntl();
-  const router = useRouter();
-  const auth = getAuth(firebaseApp);
-
-  const authPersistence = async () => {
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const onGoogleLogin = async () => {
     try {
-      const provider = new GoogleAuthProvider();
-      await authPersistence();
-      await signInWithPopup(auth, provider);
-      router.push("/");
+      await signIn("google", { callbackUrl: "/" });
     } catch (error: any) {
+      console.error(error);
       toast.error(error.message);
-      if (error.code === "auth/account-exists-with-different-credential") {
-        console.error(error.code);
-      } else {
-        console.error(error);
-      }
     }
   };
 
   const onFacebookLogin = async () => {
-    const provider = new FacebookAuthProvider();
     try {
-      await authPersistence();
-      const user = await signInWithPopup(auth, provider);
-      router.push("/");
+      await signIn("facebook", { callbackUrl: "/" });
     } catch (error: any) {
       console.error(error);
       toast.error(error.message);
@@ -102,5 +72,24 @@ const Signup: NextPage = () => {
     </div>
   );
 };
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = await getSession(ctx);
+
+  if (session?.user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}
 
 export default Signup;

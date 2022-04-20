@@ -2,22 +2,18 @@ import type { NextPage } from "next";
 import { useIntl } from "react-intl";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { useRouter } from "next/router";
-import { getAuth, signOut } from "firebase/auth";
+import { signOut } from "next-auth/react";
 import { ArrowBack } from "@mui/icons-material";
-import firebaseApp from "lib/firebase";
+import Protected from "components/Protected";
 import Button from "components/Button";
 
 const Settings: NextPage = () => {
   const intl = useIntl();
-  const router = useRouter();
-  const auth = getAuth(firebaseApp);
 
   const onLogout = async () => {
     try {
-      await signOut(auth);
+      signOut({ callbackUrl: "/signin" });
       toast.success(intl.formatMessage({ defaultMessage: "Signed out" }));
-      router.push("/signin");
     } catch (err: any) {
       console.error(err);
       toast.error(err.message);
@@ -25,21 +21,23 @@ const Settings: NextPage = () => {
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-row justify-start items-center mt-4 mx-4">
-        <Link href="/account">
-          <a className="mr-2">
-            <ArrowBack />
-          </a>
-        </Link>
-        <h1 className="text-2xl font-semibold">
-          {intl.formatMessage({ defaultMessage: "Settings" })}
-        </h1>
+    <Protected>
+      <div className="flex flex-col">
+        <div className="flex flex-row justify-start items-center mt-4 mx-4">
+          <Link href="/account">
+            <a className="mr-2">
+              <ArrowBack />
+            </a>
+          </Link>
+          <h1 className="text-2xl font-semibold">
+            {intl.formatMessage({ defaultMessage: "Settings" })}
+          </h1>
+        </div>
+        <Button type="button" onClick={onLogout}>
+          {intl.formatMessage({ defaultMessage: "Sign out" })}
+        </Button>
       </div>
-      <Button type="button" onClick={onLogout}>
-        {intl.formatMessage({ defaultMessage: "Sign out" })}
-      </Button>
-    </div>
+    </Protected>
   );
 };
 

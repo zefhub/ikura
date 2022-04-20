@@ -4,19 +4,24 @@ import { useIntl } from "react-intl";
 import { toast } from "react-hot-toast";
 import { useQuery } from "@apollo/client";
 import { GET_TRANSACTIONS } from "constants/queries";
+import Protected from "components/Protected";
 import Loading from "components/Loading";
 import Transaction from "components/Transaction";
 
 const Transactions: NextPage = () => {
   const intl = useIntl();
-  const { data, loading, error } = useQuery(GET_TRANSACTIONS);
+  const { data, loading, error } = useQuery(GET_TRANSACTIONS, {
+    variables: {
+      order: {},
+    },
+  });
   if (error) {
     console.error(error);
     toast.error(error.message);
   }
 
   return (
-    <div>
+    <Protected>
       <div className="flex flex-col">
         <div className="flex flex-row justify-start items-center mt-4 mx-4">
           <h1 className="text-2xl font-semibold">
@@ -48,7 +53,7 @@ const Transactions: NextPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </Protected>
   );
 };
 

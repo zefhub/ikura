@@ -7,7 +7,8 @@ type User
             | get_in[('auth', 'USER_ID')][None]
             | collect])
     """
-  ) {
+  )
+  @upfetch(field: "firebaseId") {
   firebaseId: String! @unique @search
   email: String @unique
   givenName: String

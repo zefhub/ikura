@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { useIntl } from "react-intl";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
+import Protected from "components/Protected";
 
 const data = [
   { name: "Group A", value: 400 },
@@ -42,7 +43,7 @@ const Analytics: NextPage = () => {
   const intl = useIntl();
 
   return (
-    <div>
+    <Protected>
       <div className="flex flex-col">
         <div className="flex flex-row justify-start items-center mt-4 mx-4">
           <h1 className="text-2xl font-semibold">
@@ -74,7 +75,7 @@ const Analytics: NextPage = () => {
         */}
         <h1 className="mt-12">coming soon</h1>
       </div>
-    </div>
+    </Protected>
   );
 };
 
