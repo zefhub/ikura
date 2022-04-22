@@ -55,8 +55,6 @@ export default NextAuth({
     // maxAge: 60 * 60 * 24 * 30,
 
     encode: async ({ secret, token }: any) => {
-      console.log("secret, token", secret, token);
-
       // Zefhub user object
       let user: any = {};
 
@@ -71,8 +69,6 @@ export default NextAuth({
             expiresIn: "1h",
           }
         );
-
-        console.log("serverToken", serverToken);
 
         const client = new ApolloClient({
           uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
@@ -121,6 +117,15 @@ export default NextAuth({
     // @ts-ignore
     decode: async ({ secret, token }: any) => {
       return jwt.verify(token, secret, { algorithms: ["HS256"] });
+    },
+  },
+  callbacks: {
+    async session({ session, token, user }) {
+      // Send properties to the client, like an access_token from a provider.
+      // @ts-ignore
+      session.user = { ...session.user, id: token.id };
+
+      return session;
     },
   },
 });

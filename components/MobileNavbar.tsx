@@ -1,7 +1,8 @@
-import React, { Fragment, useState, useContext } from "react";
+import React, { Fragment, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useIntl } from "react-intl";
+import { useSession } from "next-auth/react";
 import classNames from "classnames";
 import { gql, useMutation } from "@apollo/client";
 import toast from "react-hot-toast";
@@ -17,7 +18,6 @@ import {
   GET_TRANSACTIONS,
   TRANSACTION_AMOUNT_AGGREGATE,
 } from "constants/queries";
-import UserContext from "contexts/User";
 import TransactionForm, { TransactionFormValues } from "forms/TransactionForm";
 
 const ADD_TRANSACTION = gql`
@@ -33,7 +33,7 @@ const ADD_TRANSACTION = gql`
 const MobileNavbar: React.FC = () => {
   const intl = useIntl();
   const { pathname } = useRouter();
-  const user = useContext(UserContext);
+  const { data: session } = useSession();
   const [addTransaction] = useMutation(ADD_TRANSACTION, {});
 
   const [open, setOpen] = useState<boolean>(false);
@@ -47,7 +47,10 @@ const MobileNavbar: React.FC = () => {
               amount: values.amount,
               date: values.date,
               category: { id: values.category },
-              user: { id: user?.id },
+              user: {
+                // @ts-ignore
+                id: session.user?.id,
+              },
             },
           ],
         },

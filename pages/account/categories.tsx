@@ -1,12 +1,12 @@
 import type { NextPage } from "next";
-import { Fragment, useState, useContext } from "react";
+import { useState } from "react";
 import { useIntl } from "react-intl";
 import { Dialog } from "@headlessui/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import { ArrowBack, Add } from "@mui/icons-material";
-import UserContext from "contexts/User";
 import { GET_CATEGORIES } from "constants/queries";
 import Protected from "components/Protected";
 import Category from "components/Category";
@@ -23,7 +23,7 @@ const ADD_CATEGORY = gql`
 
 const Categories: NextPage = () => {
   const intl = useIntl();
-  const user = useContext(UserContext);
+  const { data: session } = useSession();
   const [open, setOpen] = useState<boolean>(false);
   const [addCategory] = useMutation(ADD_CATEGORY, {
     refetchQueries: [GET_CATEGORIES],
@@ -44,7 +44,8 @@ const Categories: NextPage = () => {
               icon: values.icon,
               created: new Date(),
               user: {
-                id: user?.id,
+                // @ts-ignore
+                id: session.user?.id,
               },
             },
           ],
