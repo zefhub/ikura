@@ -20,7 +20,7 @@ export default function handler(
   if (cookies["__Secure-next-auth.session-token"]) {
     return res.status(200).json({
       valid: true,
-      accessToken: cookies["Secure-next-auth.session-token"],
+      accessToken: cookies["__Secure-next-auth.session-token"],
     });
   }
 
