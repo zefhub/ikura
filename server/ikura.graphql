@@ -1,16 +1,22 @@
+# Zef.SchemaVersion: v1
+# Zef.Authentication: {"Algo": "HS256", "VerificationKey": "2c3432fba16d204318282d820959521efcd43fa1f3d75abb9ec31e902c65f981", "Audience": "ikura.app", "Header": "X-Auth-Token"}
+
 type User
   @auth(
+    add: """
+    (info.context | tap[print] | get_in[('auth', 'admin')][False])
+    """
     query: """
-    (z >> RT.FirebaseId
+    (z >> RT.Email
     | value
     | equals[info.context
-            | get_in[('auth', 'USER_ID')][None]
+            | get_in[('auth', 'email')][None]
             | collect])
     """
   )
-  @upfetch(field: "firebaseId") {
-  firebaseId: String! @unique @search
-  email: String @unique
+  @upfetch(field: "email") {
+  sub: String
+  email: String! @unique @search
   givenName: String
   familyName: String
   phone: String
@@ -23,10 +29,10 @@ type User
 type Transaction
   @auth(
     query: """
-    (z >> RT.User >> RT.FirebaseId
+    (z >> RT.User >> RT.Email
     | value
     | equals[info.context
-            | get_in[('auth', 'USER_ID')][None]
+            | get_in[('auth', 'email')][None]
             | collect])
     """
   ) {
@@ -42,11 +48,18 @@ type Category
     query: """
     (Or
     [Not[has_out[RT.User]]]
-    [Z >> RT.User >> RT.FirebaseId
+    [Z >> RT.User >> RT.Email
     | value
     | equals[info.context
-              | get_in[('auth', 'USER_ID')][None]
+              | get_in[('auth', 'email')][None]
               | collect]])
+    """
+    update: """
+    (Z >> RT.User >> RT.Email
+    | value
+    | equals[info.context
+              | get_in[('auth', 'email')][None]
+              | collect])
     """
   ) {
   user: User @relation(source: "Category", rt: "User", target: "User")
@@ -56,14 +69,4 @@ type Category
   name: String
   icon: String
   created: DateTime
-}
-
-type _Auth
-  @details(
-    JWKURL: "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"
-    Audience: "ikura-9437c"
-    Header: "X-Auth-Token"
-    Namespace: "https://dgraph.io/jwt/claims"
-  ) {
-  dummy: String
 }

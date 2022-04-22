@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import * as jwt from "jsonwebtoken";
+import { gql, ApolloClient, InMemoryCache } from "@apollo/client";
 import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import GoogleProvider from "next-auth/providers/google";
@@ -54,10 +55,68 @@ export default NextAuth({
     // maxAge: 60 * 60 * 24 * 30,
 
     encode: async ({ secret, token }: any) => {
-      return jwt.sign({ ...token, userId: token.id }, secret, {
-        algorithm: "HS256",
-        // expiresIn: 30 * 24 * 60 * 60,
-      });
+      console.log("secret, token", secret, token);
+
+      // Zefhub user object
+      let user: any = {};
+
+      // During initial flow the token does not have any user data.
+      if (token?.email) {
+        // Register user on zefhub to get uid.
+        const serverToken = await jwt.sign(
+          { ...token, aud: "ikura.app", admin: true },
+          secret,
+          {
+            algorithm: "HS256",
+            expiresIn: "1h",
+          }
+        );
+
+        console.log("serverToken", serverToken);
+
+        const client = new ApolloClient({
+          uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
+          cache: new InMemoryCache(),
+          headers: {
+            "X-Auth-Token": "Bearer " + serverToken,
+          },
+        });
+        const users = await client.mutate({
+          mutation: gql`
+            mutation upfetchUser($email: String!) {
+              upfetchUser(input: [{ email: $email }]) {
+                user {
+                  id
+                }
+              }
+            }
+          `,
+          variables: {
+            email: token.email,
+          },
+        });
+
+        // Get user from zefhub.
+        if (users.data?.upfetchUser?.user) {
+          for (const zefUser of users.data.upfetchUser.user) {
+            user.id = zefUser.id;
+          }
+        }
+      }
+
+      return jwt.sign(
+        {
+          ...token,
+          ...user,
+          aud: "ikura.app",
+          iss: "https://www.ikura.app",
+        },
+        secret,
+        {
+          algorithm: "HS256",
+          // expiresIn: 30 * 24 * 60 * 60,
+        }
+      );
     },
     // @ts-ignore
     decode: async ({ secret, token }: any) => {
