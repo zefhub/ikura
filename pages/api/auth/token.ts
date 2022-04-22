@@ -15,16 +15,24 @@ export default function handler(
     return res.status(401).json({ valid: false, accessToken: "" });
   }
   const cookies = parseCookie(req.headers.cookie);
+  console.log("cookies", cookies);
 
-  if (!cookies["next-auth.session-token"]) {
-    console.warn("no session token");
-    return res.status(401).json({ valid: false, accessToken: "" });
+  if (cookies["Secure-next-auth.session-token"]) {
+    return res.status(200).json({
+      valid: true,
+      accessToken: cookies["Secure-next-auth.session-token"],
+    });
+  }
+
+  if (cookies["next-auth.session-token"]) {
+    return res.status(200).json({
+      valid: true,
+      accessToken: cookies["next-auth.session-token"],
+    });
   }
 
   // TODO: Validate JWT/renew
 
-  res.status(200).json({
-    valid: true,
-    accessToken: cookies["next-auth.session-token"],
-  });
+  console.warn("no session token");
+  res.status(401).json({ valid: false, accessToken: "" });
 }

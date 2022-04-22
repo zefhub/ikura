@@ -42,7 +42,7 @@ RUN git config --global --add credential.helper 'store --file=/run/secrets/gitcr
 COPY get_zefdb.sh .
 ADD ikura.graphql .
 
-RUN --mount=type=secret,id=gitcredentials bash get_zefdb.sh zef v0.15.3-dev2 'zef-.*cp310'
+RUN --mount=type=secret,id=gitcredentials bash get_zefdb.sh zef v0.15.3-dev5 'zef-.*cp310'
 
 # pip install stuff
 ADD requirements.txt .
