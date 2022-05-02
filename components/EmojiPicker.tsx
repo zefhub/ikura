@@ -23,6 +23,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = (props) => {
 
   return (
     <div className="w-full flex flex-row justify-center mb-2">
+      {/* @ts-ignore */}
       <DynamicPicker onEmojiClick={onSelect} disableSkinTonePicker />
     </div>
   );
