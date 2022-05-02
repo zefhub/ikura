@@ -25,9 +25,11 @@ export const GET_TRANSACTIONS = gql`
 `;
 
 export const GET_USER = gql`
-  query queryUser($filter: UserFilter) {
-    queryUser(filter: $filter) {
+  query getUser($id: ID!) {
+    getUser(id: $id) {
       id
+      givenName
+      familyName
     }
   }
 `;

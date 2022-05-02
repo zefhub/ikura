@@ -2,7 +2,7 @@ import { Formik, Form, Field } from "formik";
 import { useIntl } from "react-intl";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import * as Yup from "yup";
 import { GET_CATEGORIES } from "constants/queries";
 import Input from "components/Input";
@@ -84,12 +84,20 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
             ))}
           </div>
         )}
-        <Button
-          type="submit"
-          className="bg-gradient-to-br from-ikura-light to-ikura-dark text-white mt-2"
-        >
-          {intl.formatMessage({ defaultMessage: "Save" })}
-        </Button>
+        <div className="flex flex-row justify-between w-full">
+          <Button
+            type="button"
+            className="bg-gradient-to-br from-ikura-light to-ikura-dark text-white mt-2"
+          >
+            {intl.formatMessage({ defaultMessage: "Income" })}
+          </Button>
+          <Button
+            type="button"
+            className="bg-gradient-to-br from-ikura-light to-ikura-dark text-white mt-2"
+          >
+            {intl.formatMessage({ defaultMessage: "Expence" })}
+          </Button>
+        </div>
       </Form>
     </Formik>
   );

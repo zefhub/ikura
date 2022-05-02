@@ -15,7 +15,6 @@ export default function handler(
     return res.status(401).json({ valid: false, accessToken: "" });
   }
   const cookies = parseCookie(req.headers.cookie);
-  console.log("cookies", cookies);
 
   if (cookies["__Secure-next-auth.session-token"]) {
     return res.status(200).json({

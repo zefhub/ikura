@@ -27,8 +27,6 @@ const Protected: React.FC = (props) => {
     return <Loading />;
   }
 
-  console.log("user", session?.user);
-
   return (
     <UserContext.Provider value={null}>
       <div className="h-screen md:h-full">
