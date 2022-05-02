@@ -1,6 +1,7 @@
 import React from "react";
 import { useIntl } from "react-intl";
 import classNames from "classnames";
+import Dinero from "dinero.js";
 import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
 
 export interface SmallNumberCardProps {
@@ -53,7 +54,7 @@ const SmallNumberCard: React.FC<SmallNumberCardProps> = (props) => {
             "text-red-700": props.amount < 0,
           })}
         >
-          $ {intl.formatNumber(props.amount)}
+          {Dinero({ amount: props.amount, precision: 2 }).toFormat("$0,0.00")}
         </h5>
       </div>
     </div>

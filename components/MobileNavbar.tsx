@@ -14,6 +14,7 @@ import {
   AccountCircle,
   Add,
 } from "@mui/icons-material";
+import { parseCurrency } from "utils/currency";
 import {
   GET_TRANSACTIONS,
   TRANSACTION_AMOUNT_AGGREGATE,
@@ -40,11 +41,13 @@ const MobileNavbar: React.FC = () => {
 
   const onNewTransaction = async (values: TransactionFormValues) => {
     try {
+      let amount = values.type === "income" ? values.amount : -values.amount;
+
       await addTransaction({
         variables: {
           input: [
             {
-              amount: values.amount,
+              amount: parseCurrency(amount),
               date: values.date,
               category: { id: values.category },
               user: {

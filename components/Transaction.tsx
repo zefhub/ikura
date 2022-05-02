@@ -1,6 +1,7 @@
 import React from "react";
 import { useIntl } from "react-intl";
 import { DateTime } from "luxon";
+import Dinero from "dinero.js";
 
 export interface TransactionProps {
   amount: number;
@@ -28,7 +29,7 @@ const Transaction: React.FC<TransactionProps> = (props) => {
         </div>
       </div>
       <h1 className="text-lg font-semibold text-green-700">
-        $ {intl.formatNumber(props.amount)}
+        {Dinero({ amount: props.amount, precision: 2 }).toFormat("$0,0.00")}
       </h1>
     </div>
   );
