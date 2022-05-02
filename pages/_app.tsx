@@ -32,6 +32,7 @@ function CustomApp({
             <link rel="icon" href="/favicon/favicon.ico" />
             <title>Ikura</title>
           </Head>
+          {/* @ts-ignore */}
           <Component {...pageProps} />
           <Toaster />
         </ApolloProvider>
