@@ -35,7 +35,7 @@ export default NextAuth({
     }),
   ],
   adapter: DynamoDBAdapter(client, {
-    tableName: process.env.NEXT_AUTH_AWS_TABLE_NAME as string,
+    tableName: process.env.NEXT_AUTH_TABLE_NAME as string,
   }),
   session: {
     // Choose how you want to save the user session.
