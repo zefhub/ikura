@@ -38,9 +38,11 @@ const Home: NextPage = () => {
         <div className="w-full flex flex-row justify-between">
           <SmallNumberCard
             amount={income?.aggregateTransaction.amountSum || 0}
+            type="income"
           />
           <SmallNumberCard
             amount={expense?.aggregateTransaction.amountSum || 0}
+            type="expense"
           />
         </div>
         <RecentTransactions />

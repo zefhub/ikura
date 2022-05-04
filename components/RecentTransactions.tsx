@@ -9,7 +9,9 @@ import Loading from "components/Loading";
 
 const RecentTransactions: React.FC = () => {
   const intl = useIntl();
-  const { data, loading, error } = useQuery(GET_TRANSACTIONS);
+  const { data, loading, error } = useQuery(GET_TRANSACTIONS, {
+    variables: { order: { desc: "date" } },
+  });
   if (error) {
     console.error(error);
     toast.error(error.message);

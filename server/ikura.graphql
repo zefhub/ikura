@@ -40,7 +40,7 @@ type Transaction
   category: Category
     @relation(source: "Transaction", rt: "Category", target: "Category")
   amount: Int @search
-  date: DateTime
+  date: DateTime @search
 }
 
 type Category

@@ -12,7 +12,7 @@ const Transactions: NextPage = () => {
   const intl = useIntl();
   const { data, loading, error } = useQuery(GET_TRANSACTIONS, {
     variables: {
-      order: {},
+      order: { desc: "date" },
     },
   });
   if (error) {

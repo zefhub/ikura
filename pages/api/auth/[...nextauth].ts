@@ -26,16 +26,16 @@ const client = DynamoDBDocument.from(new DynamoDB(config), {
 export default NextAuth({
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID || "",
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
+      clientId: process.env.FACEBOOK_CLIENT_ID as string,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
     }),
   ],
   adapter: DynamoDBAdapter(client, {
-    tableName: "ikura-auth-prod",
+    tableName: process.env.NEXT_AUTH_AWS_TABLE_NAME as string,
   }),
   session: {
     // Choose how you want to save the user session.
