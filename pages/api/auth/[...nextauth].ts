@@ -24,6 +24,7 @@ const client = DynamoDBDocument.from(new DynamoDB(config), {
 });
 
 export default NextAuth({
+  debug: process.env.NODE_ENV === "development",
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -70,33 +71,37 @@ export default NextAuth({
           }
         );
 
-        const client = new ApolloClient({
-          uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
-          cache: new InMemoryCache(),
-          headers: {
-            "X-Auth-Token": "Bearer " + serverToken,
-          },
-        });
-        const users = await client.mutate({
-          mutation: gql`
-            mutation upfetchUser($email: String!) {
-              upfetchUser(input: [{ email: $email }]) {
-                user {
-                  id
+        try {
+          const client = new ApolloClient({
+            uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
+            cache: new InMemoryCache(),
+            headers: {
+              "X-Auth-Token": "Bearer " + serverToken,
+            },
+          });
+          const users = await client.mutate({
+            mutation: gql`
+              mutation upfetchUser($email: String!) {
+                upfetchUser(input: [{ email: $email }]) {
+                  user {
+                    id
+                  }
                 }
               }
-            }
-          `,
-          variables: {
-            email: token.email,
-          },
-        });
+            `,
+            variables: {
+              email: token.email,
+            },
+          });
 
-        // Get user from zefhub.
-        if (users.data?.upfetchUser?.user) {
-          for (const zefUser of users.data.upfetchUser.user) {
-            user.id = zefUser.id;
+          // Get user from zefhub.
+          if (users.data?.upfetchUser?.user) {
+            for (const zefUser of users.data.upfetchUser.user) {
+              user.id = zefUser.id;
+            }
           }
+        } catch (error: any) {
+          console.error("Apollo err: " + error);
         }
       }
 

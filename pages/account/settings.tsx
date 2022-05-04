@@ -48,7 +48,11 @@ const Settings: NextPage = () => {
             set: { ...values },
           },
         },
+        refetchQueries: [GET_USER],
       });
+      toast.success(
+        intl.formatMessage({ defaultMessage: "Account info updated!" })
+      );
     } catch (err: any) {
       console.error(err);
       toast.error(err.message);
