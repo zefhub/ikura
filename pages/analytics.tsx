@@ -1,46 +1,81 @@
 import type { NextPage } from "next";
 import { useIntl } from "react-intl";
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
+import { useQuery, gql } from "@apollo/client";
+import { PieChart, Pie, LabelList } from "recharts";
 import Protected from "components/Protected";
+import Loading from "components/Loading";
 
-const data = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-  { name: "Group D", value: 200 },
+const data02 = [
+  {
+    name: "Group A",
+    value: 2400,
+  },
+  {
+    name: "Group B",
+    value: 4567,
+  },
+  {
+    name: "Group C",
+    value: 1398,
+  },
+  {
+    name: "Group D",
+    value: 9800,
+  },
+  {
+    name: "Group E",
+    value: 3908,
+  },
+  {
+    name: "Group F",
+    value: 4800,
+  },
 ];
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
-const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-  index,
-}: any) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor={x > cx ? "start" : "end"}
-      dominantBaseline="central"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
+const GET_CATEGORY_CHART_DATA = gql`
+  query categoryChartData {
+    queryTransaction {
+      id
+      amount
+      category {
+        id
+        icon
+      }
+    }
+  }
+`;
 
 const Analytics: NextPage = () => {
   const intl = useIntl();
+  const {
+    data: pieChartData,
+    loading,
+    error,
+  } = useQuery(GET_CATEGORY_CHART_DATA, {});
+  console.log("pieChartData", pieChartData?.queryTransaction);
+  const a = pieChartData?.queryTransaction.reduce(
+    (total: any[], currentValue: any, currentIndex: number, arr: any[]) => {
+      console.log("total", total);
+      const itemIndex = total.findIndex(
+        (x: any) => x.categoryId === currentValue.category.id
+      );
+      if (itemIndex !== -1) {
+        return (total[itemIndex].value += currentValue.amount);
+      }
+      return [
+        ...total,
+        {
+          id: currentValue.id,
+          categoryId: currentValue.category.id,
+          name: currentValue.category.icon,
+          value: currentValue.amount,
+        },
+      ];
+    },
+    []
+  );
+
+  console.log(a);
 
   return (
     <Protected>
@@ -51,29 +86,38 @@ const Analytics: NextPage = () => {
           </h1>
         </div>
       </div>
-      <div className="flex flex-col items-center">
-        {/*
-        <PieChart width={300} height={300}>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={renderCustomizedLabel}
-            outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
+      <div className="flex flex-col justify-start items-center">
+        {loading ? (
+          <Loading />
+        ) : (
+          <PieChart width={300} height={300}>
+            <Pie
+              data={data02}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              innerRadius={50}
+              outerRadius={80}
+              fill="#82ca9d"
+              // label
+            >
+              <LabelList
+                dataKey="name"
+                position="outside"
+                offset={5}
+                color="#000"
+                fill="#000"
+                fontSize={15}
+                fontWeight="bold"
+                formatter={(value: any) => {
+                  console.log("value", value);
+                  return value + "♥️";
+                }}
               />
-            ))}
-          </Pie>
-        </PieChart>
-        */}
-        <h1 className="mt-12">coming soon</h1>
+            </Pie>
+          </PieChart>
+        )}
       </div>
     </Protected>
   );
