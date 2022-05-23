@@ -62,11 +62,13 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
             className="mb-4"
           />
           {!data.queryCategory.length ? (
-            <Link href="/account/categories">
-              <a className="self-center px-6 py-6 mt-12 mb-12 rounded-full drop-shadow-lg bg-gradient-to-br from-ikura-light to-ikura-dark text-white">
-                Add category
-              </a>
-            </Link>
+            <div className="flex flex-row justify-center w-full">
+              <Link href="/account/categories">
+                <a className="self-center px-6 py-6 mt-12 mb-12 rounded-full drop-shadow-lg bg-gradient-to-br from-ikura-light to-ikura-dark text-white">
+                  Add category
+                </a>
+              </Link>
+            </div>
           ) : (
             <div className="mb-4 w-full flex flex-col items-start">
               <h3 className="font-semibold">Select category</h3>
@@ -89,7 +91,8 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
           <div className="flex flex-row justify-between w-full">
             <Button
               type="button"
-              className="bg-gradient-to-br from-ikura-light to-ikura-dark text-white mt-2"
+              className="text-white mt-2"
+              style={{ backgroundColor: "#2ecc71" }}
               onClick={() => {
                 form.setValues({ ...form.values, type: "income" });
                 form.handleSubmit();
