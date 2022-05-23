@@ -29,6 +29,9 @@ export default NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      httpOptions: {
+        timeout: 40000,
+      },
     }),
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID as string,
@@ -60,14 +63,14 @@ export default NextAuth({
       let user: any = {};
 
       // During initial flow the token does not have any user data.
-      if (token?.email) {
+      if (token?.email !== "") {
         // Register user on zefhub to get uid.
         const serverToken = await jwt.sign(
           { ...token, aud: "ikura.app", admin: true },
           secret,
           {
             algorithm: "HS256",
-            expiresIn: "1h",
+            expiresIn: "12h",
           }
         );
 
@@ -110,7 +113,7 @@ export default NextAuth({
           ...token,
           ...user,
           aud: "ikura.app",
-          iss: "https://www.ikura.app",
+          // iss: "https://www.ikura.app",
         },
         secret,
         {

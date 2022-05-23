@@ -1,46 +1,68 @@
 import type { NextPage } from "next";
 import { useIntl } from "react-intl";
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
+import { useQuery, gql } from "@apollo/client";
+import { PieChart, Pie, LabelList } from "recharts";
+import Dinero from "dinero.js";
 import Protected from "components/Protected";
+import Loading from "components/Loading";
 
-const data = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-  { name: "Group D", value: 200 },
-];
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
-const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-  index,
-}: any) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor={x > cx ? "start" : "end"}
-      dominantBaseline="central"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
+const GET_CATEGORY_CHART_DATA = gql`
+  query categoryChartData {
+    queryTransaction {
+      id
+      amount
+      category {
+        id
+        icon
+        name
+      }
+    }
+  }
+`;
 
 const Analytics: NextPage = () => {
   const intl = useIntl();
+  const {
+    data: pieChartData,
+    loading,
+    error,
+  } = useQuery(GET_CATEGORY_CHART_DATA, {});
+  if (error) {
+    console.error(error);
+  }
+
+  const formatChartData = () => {
+    let data: {
+      name: string;
+      icon: string;
+      value: number;
+      categoryId: string;
+    }[] = [];
+
+    if (!pieChartData || !pieChartData.queryTransaction) {
+      return data;
+    }
+
+    pieChartData.queryTransaction.forEach((item: any) => {
+      const categoryIndex = data.findIndex(
+        (c) => c.categoryId === item.category.id
+      );
+      if (item.amount < 0) {
+        if (categoryIndex !== -1) {
+          data[categoryIndex].value += Math.abs(item.amount);
+        } else {
+          data.push({
+            icon: item.category.icon,
+            name: item.category.name,
+            value: Math.abs(item.amount),
+            categoryId: item.category.id,
+          });
+        }
+      }
+    });
+
+    return data;
+  };
 
   return (
     <Protected>
@@ -51,29 +73,66 @@ const Analytics: NextPage = () => {
           </h1>
         </div>
       </div>
-      <div className="flex flex-col items-center">
-        {/*
-        <PieChart width={300} height={300}>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={renderCustomizedLabel}
-            outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
-        </PieChart>
-        */}
-        <h1 className="mt-12">coming soon</h1>
+      <div className="flex flex-col justify-start items-center">
+        {loading ? (
+          <Loading />
+        ) : (
+          <div>
+            <PieChart width={300} height={300}>
+              <Pie
+                data={formatChartData()}
+                dataKey="value"
+                nameKey="icon"
+                cx="50%"
+                cy="50%"
+                innerRadius={50}
+                outerRadius={80}
+                fill="#82ca9d"
+                // label
+              >
+                <LabelList
+                  dataKey="icon"
+                  position="outside"
+                  offset={5}
+                  color="#000"
+                  fill="#000"
+                  fontSize={23}
+                  fontWeight="bold"
+                  // formatter={(value: any) => {
+                  //   console.log("value", value);
+                  //   return value;
+                  // }}
+                />
+              </Pie>
+            </PieChart>
+            <div>
+              <h2 className="text-lg font-semibold">
+                {intl.formatMessage({ defaultMessage: "Spend by category" })}
+              </h2>
+              {formatChartData().map((item: any) => (
+                <div
+                  key={`row-${item.categoryId}`}
+                  className="flex flex-row justify-between items-center py-2"
+                >
+                  <div className="flex flex-row">
+                    <div className="flex flex-row justify-center items-center w-12 h-12 bg-blue-100 rounded-lg">
+                      <span className="text-3xl">{item.icon}</span>
+                    </div>
+                    <div className="flex flex-col justify-center ml-2">
+                      <h1 className="font-semibold">{item.name}</h1>
+                    </div>
+                  </div>
+                  <h1 className="text-lg font-semibold text-red-500">
+                    -&nbsp;
+                    {Dinero({ amount: item.value, precision: 2 }).toFormat(
+                      "$0,0.00"
+                    )}
+                  </h1>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </Protected>
   );
