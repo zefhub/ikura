@@ -50,13 +50,9 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
 
 RUN ln -fs /usr/share/zoneinfo/Asia/Singapore /etc/localtime
 
-RUN git config --global --add credential.helper 'store --file=/run/secrets/gitcredentials' \
-  && git config --global url."https://github.com/".insteadOf git@github.com:
-
-COPY get_zefdb.sh .
 ADD ikura.graphql .
 
-RUN --mount=type=secret,id=gitcredentials bash get_zefdb.sh zef v0.15.3-dev5 'zef-.*cp310'
+RUN pip3 install zef==v0.15.6a2
 
 # pip install stuff
 ADD requirements.txt .
