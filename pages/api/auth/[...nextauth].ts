@@ -1,3 +1,19 @@
+/**
+ * Copyright 2022 Synchronous Technologies Pte Ltd
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import NextAuth from "next-auth";
 import * as jwt from "jsonwebtoken";
 import { gql, ApolloClient, InMemoryCache } from "@apollo/client";
@@ -29,6 +45,9 @@ export default NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      httpOptions: {
+        timeout: 40000,
+      },
     }),
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID as string,
@@ -60,14 +79,14 @@ export default NextAuth({
       let user: any = {};
 
       // During initial flow the token does not have any user data.
-      if (token?.email) {
+      if (token?.email !== "") {
         // Register user on zefhub to get uid.
         const serverToken = await jwt.sign(
           { ...token, aud: "ikura.app", admin: true },
           secret,
           {
             algorithm: "HS256",
-            expiresIn: "1h",
+            expiresIn: "12h",
           }
         );
 
@@ -110,7 +129,7 @@ export default NextAuth({
           ...token,
           ...user,
           aud: "ikura.app",
-          iss: "https://www.ikura.app",
+          // iss: "https://www.ikura.app",
         },
         secret,
         {
