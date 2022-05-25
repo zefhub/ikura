@@ -36,13 +36,15 @@ const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
   return (
     <Fragment>
       {props.label && (
-        <label className="" htmlFor={`input-${props.name}`}>
+        <label className="mt-4" htmlFor={`input-${props.name}`}>
           {props.label}
         </label>
       )}
       <input
         className={classNames(
-          `mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 ${
+          `${
+            props.label ? "mt-1" : "mt-4"
+          } block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 ${
             props.className || ""
           }`,
           fieldHasError(props) ? "is-invalid" : ""
@@ -60,7 +62,9 @@ const Input: React.FC<InputProps & FieldInputProps<any>> = (props) => {
         readOnly={props.readOnly}
       />
       {fieldHasError(props) && (
-        <div className="invalid-feedback">{props.errors[props.name]}</div>
+        <div className="invalid-feedback" style={{ display: "block" }}>
+          {props.errors[props.name]}
+        </div>
       )}
     </Fragment>
   );

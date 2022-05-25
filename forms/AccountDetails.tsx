@@ -17,12 +17,13 @@
 import { Formik, Form, Field } from "formik";
 import { useIntl } from "react-intl";
 import * as Yup from "yup";
+import FormError from "components/FormError";
 import Button from "components/Button";
 import Input from "components/Input";
 
 const validationSchema = Yup.object().shape({
-  givenName: Yup.string().required("Required"),
-  familyName: Yup.string().required("Required"),
+  givenName: Yup.string().required("Required").nullable(),
+  familyName: Yup.string().required("Required").nullable(),
 });
 
 export interface AccountDetailsFormProps {
@@ -44,30 +45,22 @@ const AccountDetails: React.FC<AccountDetailsFormProps> = (props) => {
       onSubmit={props.onSubmit}
       validationSchema={validationSchema}
     >
-      <Form className="w-full flex flex-col items-start p-5">
-        <Field
-          as={Input}
-          name="givenName"
-          type="text"
-          label="First name"
-          className="mb-4"
-        />
-        <Field
-          as={Input}
-          name="familyName"
-          type="text"
-          label="Last name"
-          className="mb-4"
-        />
-        <div className="flex flex-row justify-center w-full">
-          <Button
-            type="submit"
-            className="bg-gradient-to-br from-ikura-light to-ikura-dark text-white mt-2"
-          >
-            {intl.formatMessage({ defaultMessage: "Save" })}
-          </Button>
-        </div>
-      </Form>
+      {({ errors, touched }) => (
+        <Form className="w-full flex flex-col items-start p-5">
+          <Field as={Input} name="givenName" type="text" label="First name" />
+          <FormError name="givenName" errors={errors} touched={touched} />
+          <Field as={Input} name="familyName" type="text" label="Last name" />
+          <FormError name="familyName" errors={errors} touched={touched} />
+          <div className="flex flex-row justify-center w-full">
+            <Button
+              type="submit"
+              className="bg-gradient-to-br from-ikura-light to-ikura-dark text-white mt-6"
+            >
+              {intl.formatMessage({ defaultMessage: "Save" })}
+            </Button>
+          </div>
+        </Form>
+      )}
     </Formik>
   );
 };

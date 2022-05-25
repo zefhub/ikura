@@ -14,7 +14,7 @@
     "i18n:extract": "formatjs extract 'pages/**/*.ts*' 'components/**/*.ts*' --out-file lang/en.json",
     "i18n:compile": "formatjs compile-folder lang compiled-lang",
     "cdk": "cdk",
-    "addlicense": "addlicense -c 'Synchronous Technologies Pte Ltd' -l apache -ignore 'node_modules/**' -ignore '.next/**' -ignore 'compiled-lang/**' -ignore 'lang/**' ."
+    "addlicense": "addlicense -c 'Synchronous Technologies Pte Ltd' -l apache -ignore 'node_modules/**' -ignore '.next/**' -ignore 'compiled-lang/**' -ignore 'lang/**' -ingore 'next-env.d.ts' ."
   },
   "dependencies": {
     "@apollo/client": "^3.5.10",

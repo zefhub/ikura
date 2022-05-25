@@ -21,14 +21,15 @@ import Link from "next/link";
 import { useQuery } from "@apollo/client";
 import * as Yup from "yup";
 import { GET_CATEGORIES } from "constants/queries";
+import FormError from "components/FormError";
 import Input from "components/Input";
 import Button from "components/Button";
 import Loading from "components/Loading";
 
 const validationSchema = Yup.object().shape({
-  amount: Yup.number().required("Required"),
-  date: Yup.date().required("Required"),
-  category: Yup.string().required("Required"),
+  amount: Yup.number().required("Required").nullable(),
+  date: Yup.date().required("Required").nullable(),
+  category: Yup.string().required("Required").nullable(),
 });
 
 export interface TransactionFormProps {
@@ -68,15 +69,14 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
             type="number"
             placeholder="1,000"
             label="Amount"
-            className="mb-4"
           />
-          <Field
-            as={Input}
-            name="date"
-            type="date"
-            label="Date"
-            className="mb-4"
+          <FormError
+            name="amount"
+            errors={form.errors}
+            touched={form.touched}
           />
+          <Field as={Input} name="date" type="date" label="Date" />
+          <FormError name="date" errors={form.errors} touched={form.touched} />
           {!data.queryCategory.length ? (
             <div className="flex flex-row justify-center w-full">
               <Link href="/account/categories">
@@ -86,7 +86,7 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
               </Link>
             </div>
           ) : (
-            <div className="mb-4 w-full flex flex-col items-start">
+            <div className="mb-4 w-full flex flex-col items-start mt-4">
               <h3 className="font-semibold">Select category</h3>
               {data.queryCategory.map((category: any) => (
                 <label
@@ -102,6 +102,11 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
                   {category.name}
                 </label>
               ))}
+              <FormError
+                name="category"
+                errors={form.errors}
+                touched={form.touched}
+              />
             </div>
           )}
           <div className="flex flex-row justify-between w-full">

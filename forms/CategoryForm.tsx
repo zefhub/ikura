@@ -17,13 +17,14 @@
 import { Formik, Form, Field } from "formik";
 import { useIntl } from "react-intl";
 import * as Yup from "yup";
+import FormError from "components/FormError";
 import Input from "components/Input";
 import EmojiPicker from "components/EmojiPicker";
 import Button from "components/Button";
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required("Required"),
-  icon: Yup.string().required("Required"),
+  name: Yup.string().required("Required").nullable(),
+  icon: Yup.string().required("Required").nullable(),
 });
 
 export interface CategoryFormProps {
@@ -45,22 +46,22 @@ const CategoryForm: React.FC<CategoryFormProps> = (props) => {
       onSubmit={props.onSubmit}
       validationSchema={validationSchema}
     >
-      <Form className="w-full flex flex-col items-start">
-        <Field
-          as={Input}
-          name="name"
-          type="text"
-          label="Name"
-          className="mb-4"
-        />
-        <Field as={EmojiPicker} name="icon" />
-        <Button
-          type="submit"
-          className="bg-gradient-to-br from-ikura-light to-ikura-dark text-white mt-2"
-        >
-          {intl.formatMessage({ defaultMessage: "Save" })}
-        </Button>
-      </Form>
+      {({ errors, touched }) => (
+        <Form className="w-full flex flex-col items-start">
+          <Field as={Input} name="name" type="text" label="Name" />
+          <FormError name="name" errors={errors} touched={touched} />
+          <div className="w-full mt-4 flex flex-col items-center">
+            <Field as={EmojiPicker} name="icon" />
+            <FormError name="icon" errors={errors} touched={touched} />
+          </div>
+          <Button
+            type="submit"
+            className="bg-gradient-to-br from-ikura-light to-ikura-dark text-white mt-2"
+          >
+            {intl.formatMessage({ defaultMessage: "Save" })}
+          </Button>
+        </Form>
+      )}
     </Formik>
   );
 };
