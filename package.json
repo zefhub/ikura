@@ -13,7 +13,8 @@
     "test:ci": "jest --ci",
     "i18n:extract": "formatjs extract 'pages/**/*.ts*' 'components/**/*.ts*' --out-file lang/en.json",
     "i18n:compile": "formatjs compile-folder lang compiled-lang",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "addlicense": "addlicense -c 'Synchronous Technologies Pte Ltd' -l apache -ignore 'node_modules/**' -ignore '.next/**' -ignore 'compiled-lang/**' -ignore 'lang/**' ."
   },
   "dependencies": {
     "@apollo/client": "^3.5.10",
