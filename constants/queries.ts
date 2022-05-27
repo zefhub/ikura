@@ -40,6 +40,21 @@ export const GET_TRANSACTIONS = gql`
   }
 `;
 
+export const GET_TRANSACTION = gql`
+  query GetTransaction($id: ID!) {
+    getTransaction(id: $id) {
+      id
+      amount
+      date
+      category {
+        id
+        icon
+        name
+      }
+    }
+  }
+`;
+
 export const GET_USER = gql`
   query getUser($id: ID!) {
     getUser(id: $id) {

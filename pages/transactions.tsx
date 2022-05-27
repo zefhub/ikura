@@ -59,6 +59,7 @@ const Transactions: NextPage = () => {
                 {data.queryTransaction.map((transaction: any) => (
                   <Transaction
                     key={transaction.id}
+                    id={transaction.id}
                     category={transaction.category}
                     amount={transaction.amount}
                     date={transaction.date}
