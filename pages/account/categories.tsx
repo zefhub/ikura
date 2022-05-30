@@ -93,13 +93,16 @@ const Categories: NextPage = () => {
         ) : (
           <div className="grid grid-cols-3 place-items-center">
             {data.queryCategory.map((category: any) => (
-              <Category
-                key={category.id}
-                id={category.id}
-                name={category.name}
-                icon={category.icon}
-                className="mb-5"
-              />
+              <Link href={`/account/category/${category.id}`} key={category.id}>
+                <a>
+                  <Category
+                    id={category.id}
+                    name={category.name}
+                    icon={category.icon}
+                    className="mb-5"
+                  />
+                </a>
+              </Link>
             ))}
             <button type="button" onClick={() => setOpen(true)}>
               <Category id="" name="New" icon={<Add />} className="mb-5" />

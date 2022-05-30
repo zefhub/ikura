@@ -26,14 +26,17 @@ const DELETE_TRANSACTION = gql`
 const Transaction: NextPage = () => {
   const intl = useIntl();
   const router = useRouter();
+
   const [deleteTransaction] = useMutation(DELETE_TRANSACTION, {
     refetchQueries: [GET_TRANSACTIONS],
   });
+
   const { data, loading, error } = useQuery(GET_TRANSACTION, {
     variables: { id: router.query.id },
   });
   if (error) {
     console.error(error);
+    toast.error(error.message);
   }
 
   const onUpdate = async (values: UpdateTransactionFormValues) => {

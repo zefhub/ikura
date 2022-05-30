@@ -26,6 +26,16 @@ export const GET_CATEGORIES = gql`
   }
 `;
 
+export const GET_CATEGORY = gql`
+  query GetCategory($id: ID!) {
+    getCategory(id: $id) {
+      id
+      name
+      icon
+    }
+  }
+`;
+
 export const GET_TRANSACTIONS = gql`
   query GetTransactions($order: TransactionOrder) {
     queryTransaction(order: $order) {

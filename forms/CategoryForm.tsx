@@ -29,6 +29,7 @@ const validationSchema = Yup.object().shape({
 
 export interface CategoryFormProps {
   onSubmit: (values: CategoryFormValues) => Promise<void>;
+  onDelete?: () => void;
   initialValues?: any;
 }
 
@@ -54,12 +55,23 @@ const CategoryForm: React.FC<CategoryFormProps> = (props) => {
             <Field as={EmojiPicker} name="icon" />
             <FormError name="icon" errors={errors} touched={touched} />
           </div>
-          <Button
-            type="submit"
-            className="bg-gradient-to-br from-ikura-light to-ikura-dark text-white mt-2"
-          >
-            {intl.formatMessage({ defaultMessage: "Save" })}
-          </Button>
+          <div className="flex flex-row justify-between w-full">
+            {props.onDelete && (
+              <Button
+                type="button"
+                className="bg-gradient-to-br from-red-500 to-ikura-dark text-white mt-2"
+                onClick={() => props.onDelete}
+              >
+                {intl.formatMessage({ defaultMessage: "Delete" })}
+              </Button>
+            )}
+            <Button
+              type="submit"
+              className="bg-gradient-to-br from-ikura-light to-ikura-dark text-white mt-2"
+            >
+              {intl.formatMessage({ defaultMessage: "Save" })}
+            </Button>
+          </div>
         </Form>
       )}
     </Formik>
