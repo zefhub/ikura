@@ -17,6 +17,7 @@
 import "styles/global.scss";
 import type { AppProps } from "next/app";
 import React from "react";
+import Script from "next/script";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { SessionProvider } from "next-auth/react";
@@ -48,6 +49,20 @@ function CustomApp({
             <link rel="icon" href="/favicon/favicon.ico" />
             <title>Ikura</title>
           </Head>
+          {/* Global site tag (gtag.js) - Google Analytics */}
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-E7Q21JYW7B"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-E7Q21JYW7B');
+            `}
+          </Script>
           {/* @ts-ignore */}
           <Component {...pageProps} />
           <Toaster />
