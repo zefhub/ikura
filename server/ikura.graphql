@@ -1,10 +1,11 @@
 # Zef.SchemaVersion: v1
 # Zef.Authentication: {"Algo": "HS256", "VerificationKey": "2c3432fba16d204318282d820959521efcd43fa1f3d75abb9ec31e902c65f981", "Audience": "ikura.app", "Header": "X-Auth-Token"}
 
+
 type User
   @auth(
     add: """
-    (info.context | tap[print] | get_in[('auth', 'admin')][False])
+    (info.context | get_in[('auth', 'admin')][False])
     """
     query: """
     (z >> RT.Email
@@ -14,7 +15,10 @@ type User
             | collect])
     """
   )
-  @upfetch(field: "email") {
+@upfetch(field: "email")
+@hook(
+  onCreate: "userCreate"
+) {
   sub: String
   email: String! @unique @search
   givenName: String
@@ -24,6 +28,9 @@ type User
   transactions: [Transaction]
     @incoming
     @relation(source: "Transaction", rt: "User", target: "User")
+  categories: [Category]
+    @incoming
+    @relation(source: "Category", rt: "User", target: "User")
 }
 
 type Transaction
@@ -36,9 +43,8 @@ type Transaction
             | collect])
     """
   ) {
-  user: User @relation(source: "Transaction", rt: "User", target: "User")
+  user: User @relation(rt: "User")
   category: Category
-    @relation(source: "Transaction", rt: "Category", target: "Category")
   amount: Int @search
   date: DateTime @search
 }
@@ -62,10 +68,11 @@ type Category
               | collect])
     """
   ) {
-  user: User @relation(source: "Category", rt: "User", target: "User")
+
+  user: User
   transactions: [Transaction]
     @incoming
-    @relation(source: "Transaction", rt: "Category", target: "Category")
+    @relation(rt: "Category")
   name: String
   icon: String
   created: DateTime
