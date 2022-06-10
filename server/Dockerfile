@@ -51,8 +51,10 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
 RUN ln -fs /usr/share/zoneinfo/Asia/Singapore /etc/localtime
 
 ADD ikura.graphql .
+ADD ikura-prod.graphql .
+ADD ikura.zefops.py .
 
-RUN pip3 install zef==v0.15.6a2
+RUN pip3 install zef==v0.15.7a3
 
 # pip install stuff
 ADD requirements.txt .
@@ -60,4 +62,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 EXPOSE 5001
 
-ENTRYPOINT ["python3", "-mzef.gql.simplegql", "--port", "5001", "--create", "ikura.graphql", "ikura-production"]
+ENTRYPOINT ["python3", "-mzef.gql.simplegql", "--port", "5001", "--create", "--schema-file", "ikura-prod.graphql", "--hooks", "ikura.zefops.py", "--data-tag", "ikura-production"]
