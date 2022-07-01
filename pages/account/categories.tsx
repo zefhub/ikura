@@ -77,8 +77,8 @@ const Categories: NextPage = () => {
 
   return (
     <Protected>
-      <div className="flex flex-col px-4">
-        <div className="flex flex-row justify-start items-center mt-4 mb-6">
+      <div className="flex flex-col px-4 lg:px-0 lg:max-w-screen-md lg:ml-auto lg:mr-auto lg:mt-4">
+        <div className="flex flex-row justify-start items-center mt-4 mb-6 lg:hidden">
           <Link href="/account">
             <a className="mr-2">
               <ArrowBack />
@@ -113,7 +113,7 @@ const Categories: NextPage = () => {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <Dialog.Overlay className="z-40 fixed inset-0 bg-black opacity-30" />
         <div
-          className="flex flex-col items-start z-50 w-11/12 absolute top-0 m-4 p-4 bg-white rounded-md shadow-xl"
+          className="flex flex-col items-start z-50 w-11/12 absolute top-0 m-4 p-4 bg-white rounded-md shadow-xl lg:mr-auto lg:ml-auto lg:w-96"
           style={{ maxWidth: "400" }}
         >
           <CategoryForm onSubmit={onCategorySubmit} initialValues={{}} />

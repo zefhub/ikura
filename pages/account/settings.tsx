@@ -91,8 +91,8 @@ const Settings: NextPage = () => {
 
   return (
     <Protected>
-      <div className="flex flex-col">
-        <div className="flex flex-row justify-start items-center mt-4 mx-4">
+      <div className="flex flex-col lg:px-0 lg:max-w-screen-md lg:ml-auto lg:mr-auto lg:mt-4">
+        <div className="flex flex-row justify-start items-center mt-4 mx-4 lg:hidden">
           <Link href="/account">
             <a className="mr-2">
               <ArrowBack />

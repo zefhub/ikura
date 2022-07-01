@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useIntl } from "react-intl";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { gql, useMutation } from "@apollo/client";
 import { parseCurrency } from "utils/currency";
-import { Dialog } from "@headlessui/react";
+import { Dialog, Menu } from "@headlessui/react";
 import TransactionForm, { TransactionFormValues } from "forms/TransactionForm";
 import {
   GET_TRANSACTIONS,
@@ -66,19 +67,42 @@ const HeaderNavbar: React.FC = () => {
         <div className="flex justify-between pt-2">
           <button
             type="button"
-            className="rounded-full bg-gradient-to-br from-ikura-light to-ikura-dark text-white pr-2 pl-2"
+            className="rounded-full bg-gradient-to-br from-ikura-light to-ikura-dark text-white pr-2 pl-2 h-7"
             onClick={() => setOpen(true)}
           >
             Add transaction
           </button>
-          <Image src={logo} alt="logo" width={30} height={30} />
-          <Image
-            src={session?.user?.image || "https://via.placeholder.com/150"}
-            alt="profile"
-            className="rounded-full"
-            width={30}
-            height={30}
-          />
+          <Link href="/dashboard">
+            <a>
+              <Image src={logo} alt="logo" width={30} height={30} />
+            </a>
+          </Link>
+          <Menu>
+            <Menu.Button>
+              <Image
+                src={session?.user?.image || "https://via.placeholder.com/150"}
+                alt="profile"
+                className="rounded-full"
+                width={30}
+                height={30}
+              />
+            </Menu.Button>
+            <Menu.Items
+              className="z-50 absolute bg-white rounded-md shadow-xl top-14 p-4 border-2 border-gray-100 flex flex-col"
+              style={{ right: "85vh" }}
+            >
+              <Menu.Item>
+                <Link href="/account/settings">
+                  <a className="mb-3">Account settings</a>
+                </Link>
+              </Menu.Item>
+              <Menu.Item>
+                <Link href="/account/categories">
+                  <a>Categories</a>
+                </Link>
+              </Menu.Item>
+            </Menu.Items>
+          </Menu>
         </div>
       </div>
       <Dialog open={open} onClose={() => setOpen(false)}>
