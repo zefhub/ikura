@@ -15,6 +15,7 @@
  */
 
 import type { NextPage } from "next";
+import { useEffect } from "react";
 import { useIntl } from "react-intl";
 import { useQuery } from "@apollo/client";
 import toast from "react-hot-toast";
@@ -47,9 +48,16 @@ const Home: NextPage = () => {
     toast.error(expenseError.message);
   }
 
+  useEffect(() => {
+    const width = screen.width;
+    if (width > 992) {
+      window.location.replace("/dashboard");
+    }
+  }, []);
+
   return (
     <Protected>
-      <div className="flex flex-col items-center p-5">
+      <div className="flex flex-col items-center p-5 lg:max-w-screen-md lg:self-center">
         <LargeNumberCard />
         <div className="w-full flex flex-row justify-between">
           <SmallNumberCard

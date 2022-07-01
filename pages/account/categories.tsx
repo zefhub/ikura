@@ -112,7 +112,10 @@ const Categories: NextPage = () => {
       </div>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <Dialog.Overlay className="z-40 fixed inset-0 bg-black opacity-30" />
-        <div className="flex flex-col items-start z-50 w-11/12 absolute top-0 m-4 p-4 bg-white rounded-md shadow-xl">
+        <div
+          className="flex flex-col items-start z-50 w-11/12 absolute top-0 m-4 p-4 bg-white rounded-md shadow-xl"
+          style={{ maxWidth: "400" }}
+        >
           <CategoryForm onSubmit={onCategorySubmit} initialValues={{}} />
         </div>
       </Dialog>

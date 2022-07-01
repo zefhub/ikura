@@ -87,7 +87,7 @@ const MobileNavbar: React.FC = () => {
 
   return (
     <Fragment>
-      <div className="w-full h-12 fixed bottom-0 shadow-reversed bg-white">
+      <div className="w-full h-12 fixed bottom-0 shadow-reversed bg-white lg:hidden">
         <div className="h-full flex flex-row items-center justify-between px-6">
           <Link href="/">
             <a
@@ -136,7 +136,10 @@ const MobileNavbar: React.FC = () => {
       </div>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <Dialog.Overlay className="z-40 fixed inset-0 bg-black opacity-30" />
-        <div className="flex flex-col items-start z-50 w-11/12 absolute top-0 m-4 p-4 bg-white rounded-md shadow-xl">
+        <div
+          className="flex flex-col items-start z-50 w-11/12 absolute top-0 m-4 p-4 bg-white rounded-md shadow-xl"
+          style={{ maxWidth: "400" }}
+        >
           <TransactionForm onSubmit={onNewTransaction} initialValues={{}} />
         </div>
       </Dialog>

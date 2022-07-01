@@ -26,7 +26,7 @@ const moduleExports = {
     localeDetection: true,
   },
   images: {
-    domains: [],
+    domains: ["lh3.googleusercontent.com"],
   },
   webpack(config, { dev, ...other }) {
     if (!dev) {

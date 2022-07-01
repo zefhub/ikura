@@ -21,6 +21,7 @@ import { useIntl } from "react-intl";
 import toast from "react-hot-toast";
 import { UserContext } from "contexts/User";
 import Loading from "components/Loading";
+import HeaderNavbar from "components/HeaderNavbar";
 import MobileNavbar from "components/MobileNavbar";
 
 const Protected: React.FC = (props) => {
@@ -46,6 +47,7 @@ const Protected: React.FC = (props) => {
   return (
     <UserContext.Provider value={null}>
       <div className="h-screen md:h-full">
+        {session?.user && <HeaderNavbar />}
         <div className="pb-12">{props.children}</div>
         {session?.user && <MobileNavbar />}
       </div>
