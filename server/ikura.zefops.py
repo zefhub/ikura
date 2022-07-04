@@ -9,10 +9,10 @@ def setupGraph(data_g):
     if length(data_g | now | all[ET.DefaultCategory]) == 0:
         # ...
         {ET.DefaultCategory: {
-            RT.Name: "Groceries",
-            RT.Icon: "blah"
+            RT.Name: "Transportation",
+            RT.Icon: "🚂"
         }} | data_g | run
-        
+
 
 @func(g)
 def userCreate(z):
@@ -26,4 +26,3 @@ def userCreate(z):
             RT.Icon: def_cat | F.Icon | collect,
             RT.User: z,
         }} | data_g | run
-    
