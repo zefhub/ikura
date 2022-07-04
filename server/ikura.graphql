@@ -1,7 +1,6 @@
 # Zef.SchemaVersion: v1
 # Zef.Authentication: {"Algo": "HS256", "VerificationKey": "2c3432fba16d204318282d820959521efcd43fa1f3d75abb9ec31e902c65f981", "Audience": "ikura.app", "Header": "X-Auth-Token"}
 
-
 type User
   @auth(
     add: """
@@ -15,10 +14,8 @@ type User
             | collect])
     """
   )
-@upfetch(field: "email")
-@hook(
-  onCreate: "userCreate"
-) {
+  @upfetch(field: "email")
+  @hook(onCreate: "userCreate") {
   sub: String
   email: String! @unique @search
   givenName: String
@@ -46,6 +43,7 @@ type Transaction
   user: User @relation(rt: "User")
   category: Category
   amount: Int @search
+  description: String
   date: DateTime @search
 }
 
@@ -68,11 +66,8 @@ type Category
               | collect])
     """
   ) {
-
   user: User
-  transactions: [Transaction]
-    @incoming
-    @relation(rt: "Category")
+  transactions: [Transaction] @incoming @relation(rt: "Category")
   name: String
   icon: String
   created: DateTime

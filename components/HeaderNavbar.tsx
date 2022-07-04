@@ -41,6 +41,7 @@ const HeaderNavbar: React.FC = () => {
             {
               amount: parseCurrency(amount),
               date: values.date,
+              description: values.description,
               category: { id: values.category },
               user: {
                 // @ts-ignore

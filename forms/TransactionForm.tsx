@@ -29,6 +29,7 @@ import Loading from "components/Loading";
 const validationSchema = Yup.object().shape({
   amount: Yup.number().required("Required").nullable(),
   date: Yup.date().required("Required").nullable(),
+  description: Yup.string().nullable(),
   category: Yup.string().required("Required").nullable(),
 });
 
@@ -40,6 +41,7 @@ export interface TransactionFormProps {
 export type TransactionFormValues = {
   amount: number;
   date: Date;
+  description: String;
   category: string;
   type: "expense" | "income";
 };
@@ -77,6 +79,17 @@ const TransactionForm: React.FC<TransactionFormProps> = (props) => {
           />
           <Field as={Input} name="date" type="date" label="Date" />
           <FormError name="date" errors={form.errors} touched={form.touched} />
+          <Field
+            as={Input}
+            name="description"
+            type="text"
+            label="Description"
+          />
+          <FormError
+            name="description"
+            errors={form.errors}
+            touched={form.touched}
+          />
           {!data.queryCategory.length ? (
             <div className="flex flex-row justify-center w-full">
               <Link href="/account/categories">
