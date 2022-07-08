@@ -37,8 +37,8 @@ export const GET_CATEGORY = gql`
 `;
 
 export const GET_TRANSACTIONS = gql`
-  query GetTransactions($order: TransactionOrder) {
-    queryTransaction(order: $order) {
+  query GetTransactions($order: TransactionOrder, $filter: TransactionFilter) {
+    queryTransaction(order: $order, filter: $filter) {
       id
       amount
       date
