@@ -84,7 +84,10 @@ const Dashboard: NextPage = () => {
               </div>
             </div>
             <div className="flex flex-row justify-start">
-              <CategoryChart />
+              <CategoryChart
+                dateStart={dateStart.toJSDate()}
+                dateEnd={dateEnd.toJSDate()}
+              />
             </div>
           </div>
           <div className="w-1/2 ml-2 pt-2">

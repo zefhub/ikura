@@ -6,8 +6,8 @@ import Dinero from "dinero.js";
 import Loading from "components/Loading";
 
 const GET_CATEGORY_CHART_DATA = gql`
-  query categoryChartData {
-    queryTransaction {
+  query categoryChartData($filter: TransactionFilter) {
+    queryTransaction(filter: $filter) {
       id
       amount
       category {
@@ -19,13 +19,25 @@ const GET_CATEGORY_CHART_DATA = gql`
   }
 `;
 
-const CategoryChart: React.FC = () => {
+export interface CategoryChartProps {
+  dateStart?: Date;
+  dateEnd?: Date;
+}
+
+const CategoryChart: React.FC<CategoryChartProps> = (props) => {
   const intl = useIntl();
   const {
     data: pieChartData,
     loading,
     error,
-  } = useQuery(GET_CATEGORY_CHART_DATA, {});
+  } = useQuery(GET_CATEGORY_CHART_DATA, {
+    variables: {
+      filter:
+        props.dateStart && props.dateEnd
+          ? { date: { between: { min: props.dateStart, max: props.dateEnd } } }
+          : {},
+    },
+  });
   if (error) {
     console.error(error);
   }
