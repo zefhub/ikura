@@ -38,6 +38,7 @@ type Transaction
   user: User @relation(rt: "User")
   category: Category
   amount: Int @search
+  description: String
   date: DateTime @search
 }
 

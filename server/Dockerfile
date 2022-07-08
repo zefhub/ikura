@@ -54,7 +54,7 @@ ADD ikura.graphql .
 ADD ikura-prod.graphql .
 ADD ikura.zefops.py .
 
-RUN pip3 install zef==v0.15.7a3
+RUN pip3 install zef==v0.15.7a7
 
 # pip install stuff
 ADD requirements.txt .

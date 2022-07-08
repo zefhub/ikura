@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useIntl } from "react-intl";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import toast from "react-hot-toast";
 import { TRANSACTION_AMOUNT_AGGREGATE } from "constants/queries";
 import { GET_TRANSACTIONS } from "constants/queries";
@@ -13,10 +13,20 @@ import CategoryChart from "components/CategoryChart";
 
 const Dashboard: NextPage = () => {
   const intl = useIntl();
+  const [dateStart, setDateStart] = useState(new Date());
+  const [dateEnd, setDateEnd] = useState(new Date());
+
   const { data: income, error: incomeError } = useQuery(
     TRANSACTION_AMOUNT_AGGREGATE,
     {
-      variables: { filter: { and: [{ amount: { gt: 0 } }] } },
+      variables: {
+        filter: {
+          and: [
+            { amount: { gt: 0 } },
+            // { date: { between: { min: dateStart, max: dateEnd } } },
+          ],
+        },
+      },
     }
   );
   if (incomeError) {
