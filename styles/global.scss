@@ -25,3 +25,9 @@
     font-family: "IBM Plex Sans", sans-serif;
   }
 }
+
+.navbar-header {
+  @media only screen and (max-width: 600px) {
+    display: none;
+  }
+}

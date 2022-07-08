@@ -63,7 +63,7 @@ const HeaderNavbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 h-12 border-b-2 border-gray-500 bg-white w-full mb-2 z-50">
+    <header className="sticky top-0 h-12 border-b-2 border-gray-500 bg-white w-full mb-2 z-50 navbar-header">
       <div className="max-w-screen-md ml-auto mr-auto">
         <div className="flex justify-between pt-2">
           <button
