@@ -17,7 +17,7 @@
     "addlicense": "addlicense -c 'Synchronous Technologies Pte Ltd' -l apache -ignore 'node_modules/**' -ignore '.next/**' -ignore 'compiled-lang/**' -ignore 'lang/**' -ingore 'next-env.d.ts' ."
   },
   "dependencies": {
-    "@apollo/client": "^3.5.10",
+    "@apollo/client": "^3.6.2",
     "@aws-sdk/client-dynamodb": "^3.82.0",
     "@aws-sdk/lib-dynamodb": "^3.82.0",
     "@emotion/styled": "^11.8.1",
