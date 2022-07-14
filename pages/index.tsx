@@ -15,8 +15,10 @@
  */
 
 import type { NextPage } from "next";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
+import { DateTime } from "luxon";
+import DatePicker from "react-datepicker";
 import { useQuery } from "@apollo/client";
 import toast from "react-hot-toast";
 import { TRANSACTION_AMOUNT_AGGREGATE } from "constants/queries";
@@ -27,10 +29,20 @@ import RecentTransactions from "components/RecentTransactions";
 
 const Home: NextPage = () => {
   const intl = useIntl();
+  const [dateStart, setDateStart] = useState(DateTime.now().startOf("month"));
+  const [dateEnd, setDateEnd] = useState(DateTime.now());
+
   const { data: income, error: incomeError } = useQuery(
     TRANSACTION_AMOUNT_AGGREGATE,
     {
-      variables: { filter: { and: [{ amount: { gt: 0 } }] } },
+      variables: {
+        filter: {
+          and: [
+            { amount: { gt: 0 } },
+            { date: { between: { min: dateStart, max: dateEnd } } },
+          ],
+        },
+      },
     }
   );
   if (incomeError) {
@@ -40,7 +52,14 @@ const Home: NextPage = () => {
   const { data: expense, error: expenseError } = useQuery(
     TRANSACTION_AMOUNT_AGGREGATE,
     {
-      variables: { filter: { and: [{ amount: { lt: 0 } }] } },
+      variables: {
+        filter: {
+          and: [
+            { amount: { lt: 0 } },
+            { date: { between: { min: dateStart, max: dateEnd } } },
+          ],
+        },
+      },
     }
   );
   if (expenseError) {
@@ -58,6 +77,25 @@ const Home: NextPage = () => {
   return (
     <Protected>
       <div className="flex flex-col items-center p-5 lg:max-w-screen-md lg:self-center">
+        <div className="pr-5 pl-5">
+          <div className="flex flex-row justify-between w-full">
+            {/* @ts-ignore */}
+            <DatePicker
+              selected={dateStart.toJSDate()}
+              onChange={(date: Date) => setDateStart(DateTime.fromJSDate(date))}
+              className="rounded-md w-36"
+              wrapperClassName="mr-7"
+            />
+
+            {/* @ts-ignore */}
+            <DatePicker
+              selected={dateEnd.toJSDate()}
+              onChange={(date: Date) => setDateEnd(DateTime.fromJSDate(date))}
+              className="rounded-md w-36"
+              wrapperClassName=""
+            />
+          </div>
+        </div>
         <LargeNumberCard />
         <div className="w-full flex flex-row justify-between">
           <SmallNumberCard
@@ -69,7 +107,10 @@ const Home: NextPage = () => {
             type="expense"
           />
         </div>
-        <RecentTransactions />
+        <RecentTransactions
+          dateStart={dateStart.toJSDate()}
+          dateEnd={dateEnd.toJSDate()}
+        />
       </div>
     </Protected>
   );

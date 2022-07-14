@@ -23,10 +23,21 @@ import { GET_TRANSACTIONS } from "constants/queries";
 import Transaction from "components/Transaction";
 import Loading from "components/Loading";
 
-const RecentTransactions: React.FC = () => {
+export interface RecentTransactionsProps {
+  dateStart?: Date;
+  dateEnd?: Date;
+}
+
+const RecentTransactions: React.FC<RecentTransactionsProps> = (props) => {
   const intl = useIntl();
   const { data, loading, error } = useQuery(GET_TRANSACTIONS, {
-    variables: { order: { desc: "date" } },
+    variables: {
+      order: { desc: "date" },
+      filter:
+        props.dateStart && props.dateEnd
+          ? { date: { between: { min: props.dateStart, max: props.dateEnd } } }
+          : {},
+    },
   });
   if (error) {
     console.error(error);
