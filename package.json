@@ -48,7 +48,7 @@
     "react-hotkeys-hook": "^3.4.6",
     "react-intl": "^5.20.13",
     "react-select": "^5.1.0",
-    "recharts": "^2.1.9",
+    "recharts": "^2.1.13",
     "sass": "^1.42.1",
     "yup": "^0.32.11"
   },
