@@ -39,7 +39,7 @@
     "luxon": "^2.4.0",
     "next": "11.1.4",
     "next-absolute-url": "^1.2.2",
-    "next-auth": "^4.3.4",
+    "next-auth": "^4.12.0",
     "react": "17.0.2",
     "react-css-collapse": "^4.1.0",
     "react-datepicker": "^4.8.0",
